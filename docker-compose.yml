@@ -4,6 +4,8 @@ services:
     image: postgres:latest
     env_file:
       - .env
+    volumes:
+      - ./db_init_scripts:/docker-entrypoint-initdb.d
     ports:
       - 5432:5432
     restart: always
@@ -11,6 +13,8 @@ services:
     container_name: backend
     build: 
       context: ./backend
+    depends_on:
+      - db
     ports:
       - 8000:5000
     restart: always
