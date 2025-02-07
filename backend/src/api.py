@@ -1,5 +1,5 @@
 import os
-from flask import Flask
+from flask import Flask, request, jsonify
 from flask_sock import Sock
 from flask_sqlalchemy import SQLAlchemy
 import dotenv
