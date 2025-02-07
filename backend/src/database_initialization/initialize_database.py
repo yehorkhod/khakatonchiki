@@ -39,7 +39,7 @@ database_uri: str = (
     f"{os.getenv('POSTGRE_USER')}"
     ":"
     f"{os.getenv('POSTGRE_PASSWORD')}"
-    "@localhost:5432/"
+    "@localhost/"
     f"{os.getenv('POSTGRE_DB')}"
 )
 
