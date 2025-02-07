@@ -1,0 +1,9 @@
+@use '../../utils/mixins.scss' as *;
+
+.page {
+  @include page-min-height;
+}
+
+.title {
+  text-align: left;
+}

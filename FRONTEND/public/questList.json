@@ -1,0 +1,159 @@
+[
+  {
+    "title": "Математичний виклик",
+    "description": "Виріши серію завдань з математики та фізики.",
+    "taskCount": 5,
+    "timeLimit": 30,
+    "media": [
+      { "type": "text", "content": "Розв'яжи рівняння: x² + 3x - 4 = 0." },
+      { "type": "image", "content": "math_problem_image.jpg" },
+      { "type": "video", "content": "math_tutorial.mp4" }
+    ],
+    "questions": [
+      { "type": "open", "question": "Як розв'язати це рівняння?" },
+      { "type": "multipleChoice", "question": "Що таке похідна функції?", "options": ["Число", "Процес", "Теорема"] }
+    ],
+    "rating": 4.7,
+    "feedback": [
+      { "user": "user123", "rating": 5, "comment": "Чудові завдання!" },
+      { "user": "user456", "rating": 4, "comment": "Цікаві задачі." }
+    ]
+  },
+  {
+    "title": "Історія мистецтва",
+    "description": "Пройди квест, щоб дізнатися більше про історію мистецтва.",
+    "taskCount": 4,
+    "timeLimit": 25,
+    "media": [
+      { "type": "text", "content": "Хто автор картини 'Мона Ліза'?" },
+      { "type": "image", "content": "mona_lisa.jpg" }
+    ],
+    "questions": [
+      { "type": "multipleChoice", "question": "Хто автор картини 'Мона Ліза'?", "options": ["Леонардо да Вінчі", "Пабло Пікассо", "Вінсент ван Гог"] },
+      { "type": "open", "question": "Опишіть стиль мистецтва Ренесанс." }
+    ],
+    "rating": 4.5,
+    "feedback": [
+      { "user": "artLover", "rating": 5, "comment": "Дуже пізнавально!" },
+      { "user": "museumGoer", "rating": 4, "comment": "Завдання цікаві, але часом складні." }
+    ]
+  },
+  {
+    "title": "Мандрівка в космос",
+    "description": "Пройди квест та дізнайся більше про космос та астрономію.",
+    "taskCount": 6,
+    "timeLimit": 40,
+    "media": [
+      { "type": "text", "content": "Яка планета найбільша у Сонячній системі?" },
+      { "type": "image", "content": "solar_system.jpg" },
+      { "type": "video", "content": "space_exploration.mp4" }
+    ],
+    "questions": [
+      { "type": "multipleChoice", "question": "Яка планета найбільша у Сонячній системі?", "options": ["Юпітер", "Сатурн", "Марс"] },
+      { "type": "open", "question": "Що таке чорна діра?" }
+    ],
+    "rating": 4.9,
+    "feedback": [
+      { "user": "spaceFan", "rating": 5, "comment": "Неймовірно цікаво і пізнавально!" },
+      { "user": "astronomyEnthusiast", "rating": 5, "comment": "Чудові матеріали для любителів астрономії." }
+    ]
+  },
+  {
+    "title": "Кулінарний експеримент",
+    "description": "Візьміть участь у кулінарному квесті та дізнайтесь нові рецепти.",
+    "taskCount": 3,
+    "timeLimit": 15,
+    "media": [
+      { "type": "text", "content": "Який інгредієнт основний у страві 'Паста карбонара'?" },
+      { "type": "image", "content": "pasta_carbonara.jpg" }
+    ],
+    "questions": [
+      { "type": "multipleChoice", "question": "Який інгредієнт основний у страві 'Паста карбонара'?", "options": ["Яйця", "Молоко", "Томатний соус"] },
+      { "type": "open", "question": "Опишіть процес приготування пасти карбонара." }
+    ],
+    "rating": 4.8,
+    "feedback": [
+      { "user": "gourmet", "rating": 5, "comment": "Відмінні рецепти!" },
+      { "user": "chefMaster", "rating": 4, "comment": "Все дуже смачно, але деякі етапи не зовсім зрозумілі." }
+    ]
+  },
+  {
+    "title": "Математичний виклик",
+    "description": "Виріши серію завдань з математики та фізики.",
+    "taskCount": 5,
+    "timeLimit": 30,
+    "media": [
+      { "type": "text", "content": "Розв'яжи рівняння: x² + 3x - 4 = 0." },
+      { "type": "image", "content": "math_problem_image.jpg" },
+      { "type": "video", "content": "math_tutorial.mp4" }
+    ],
+    "questions": [
+      { "type": "open", "question": "Як розв'язати це рівняння?" },
+      { "type": "multipleChoice", "question": "Що таке похідна функції?", "options": ["Число", "Процес", "Теорема"] }
+    ],
+    "rating": 4.7,
+    "feedback": [
+      { "user": "user123", "rating": 5, "comment": "Чудові завдання!" },
+      { "user": "user456", "rating": 4, "comment": "Цікаві задачі." }
+    ]
+  },
+  {
+    "title": "Історія мистецтва",
+    "description": "Пройди квест, щоб дізнатися більше про історію мистецтва.",
+    "taskCount": 4,
+    "timeLimit": 25,
+    "media": [
+      { "type": "text", "content": "Хто автор картини 'Мона Ліза'?" },
+      { "type": "image", "content": "mona_lisa.jpg" }
+    ],
+    "questions": [
+      { "type": "multipleChoice", "question": "Хто автор картини 'Мона Ліза'?", "options": ["Леонардо да Вінчі", "Пабло Пікассо", "Вінсент ван Гог"] },
+      { "type": "open", "question": "Опишіть стиль мистецтва Ренесанс." }
+    ],
+    "rating": 4.5,
+    "feedback": [
+      { "user": "artLover", "rating": 5, "comment": "Дуже пізнавально!" },
+      { "user": "museumGoer", "rating": 4, "comment": "Завдання цікаві, але часом складні." }
+    ]
+  },
+  {
+    "title": "Мандрівка в космос",
+    "description": "Пройди квест та дізнайся більше про космос та астрономію.",
+    "taskCount": 6,
+    "timeLimit": 40,
+    "media": [
+      { "type": "text", "content": "Яка планета найбільша у Сонячній системі?" },
+      { "type": "image", "content": "solar_system.jpg" },
+      { "type": "video", "content": "space_exploration.mp4" }
+    ],
+    "questions": [
+      { "type": "multipleChoice", "question": "Яка планета найбільша у Сонячній системі?", "options": ["Юпітер", "Сатурн", "Марс"] },
+      { "type": "open", "question": "Що таке чорна діра?" }
+    ],
+    "rating": 4.9,
+    "feedback": [
+      { "user": "spaceFan", "rating": 5, "comment": "Неймовірно цікаво і пізнавально!" },
+      { "user": "astronomyEnthusiast", "rating": 5, "comment": "Чудові матеріали для любителів астрономії." }
+    ]
+  },
+  {
+    "title": "Кулінарний експеримент",
+    "description": "Візьміть участь у кулінарному квесті та дізнайтесь нові рецепти.",
+    "taskCount": 3,
+    "timeLimit": 15,
+    "media": [
+      { "type": "text", "content": "Який інгредієнт основний у страві 'Паста карбонара'?" },
+      { "type": "image", "content": "pasta_carbonara.jpg" }
+    ],
+    "questions": [
+      { "type": "multipleChoice", "question": "Який інгредієнт основний у страві 'Паста карбонара'?", "options": ["Яйця", "Молоко", "Томатний соус"] },
+      { "type": "open", "question": "Опишіть процес приготування пасти карбонара." }
+    ],
+    "rating": 4.8,
+    "feedback": [
+      { "user": "gourmet", "rating": 5, "comment": "Відмінні рецепти!" },
+      { "user": "chefMaster", "rating": 4, "comment": "Все дуже смачно, але деякі етапи не зовсім зрозумілі." }
+    ]
+  }
+]
+

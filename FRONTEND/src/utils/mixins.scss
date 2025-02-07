@@ -1,0 +1,56 @@
+@use './variables.scss' as *;
+
+@mixin on-tablet {
+  @media (min-width: $tablet-min-width) {
+    @content;
+  }
+}
+
+@mixin on-tablet-large {
+  @media (min-width: $tablet-large-min-width) {
+    @content;
+  }
+}
+
+@mixin on-mobile-large {
+  @media (min-width: $mobile-large-min-width) {
+    @content;
+  }
+}
+
+@mixin on-desktop {
+  @media (min-width: $desktop-min-width) {
+    @content;
+  }
+}
+
+@mixin page-grid {
+  display: grid;
+  // column-gap: 16px;
+  row-gap: 40px;
+  grid-template-columns: repeat(4, 1fr);
+
+  @include on-tablet {
+    grid-template-columns: repeat(12, 1fr);
+  }
+
+  @include on-tablet-large {
+    grid-template-columns: repeat(12, 1fr);
+  }
+
+  @include on-desktop {
+    grid-template-columns: repeat(24, 1fr);
+  }
+}
+
+@mixin page-min-height {
+  min-height: calc(100vh - 268px - 68px);
+
+  @include on-tablet {
+    min-height: calc(100vh - 118px - 68px);
+  }
+
+  @include on-desktop {
+    min-height: calc(100vh - 118px - 84px);
+  }
+}
