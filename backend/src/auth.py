@@ -53,7 +53,7 @@ def register():
     new_user = User(
         email=email,
         username=username,
-        password=generate_password_hash(password, method='sha256')
+        password=generate_password_hash(password)
     )
 
     # add the new user to the database
