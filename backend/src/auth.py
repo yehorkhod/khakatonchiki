@@ -25,9 +25,16 @@ def login():
 
     # if the above check passes, then we know the user has the right credentials
     login_user(user, remember=remember)
-    return jsonify({"message": "Login successful", "user": {"email": user.email, "username": user.username}}), 200
+    return jsonify({
+        "message": "Login successful", 
+        "user": {
+            "id": user.id,
+            "email": user.email, 
+            "username": user.username
+        }
+    }), 200
 
-@auth.route('/reqister', methods=['POST'])
+@auth.route('/register', methods=['POST'])
 def register():
     data = request.json
     email = data.get('email')
@@ -53,10 +60,17 @@ def register():
     db.session.add(new_user)
     db.session.commit()
 
-    return jsonify({"message": "User registered successfully"}), 201
+    return jsonify({
+        "message": "User registered successfully", 
+        "user": {
+            "id": new_user.id,
+            "email": new_user.email, 
+            "username": new_user.username
+        }
+    }), 201
 
 @auth.route('/logout', methods=['POST'])
 @login_required
 def logout():
     logout_user()
-    return jsonify({"message": "Logged out successfully"}), 200
+    return jsonify({"message": "Logout successful"}), 200
