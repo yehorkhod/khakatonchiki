@@ -76,6 +76,7 @@
 .section-how {
   display: flex;
   flex-direction: column;
+  margin-top: 30px;
   // align-items: center;
   // padding: 50px 20px;
   // background-color: #f9f9f9;
@@ -84,6 +85,8 @@
     font-size: 24px;
     font-weight: bold;
     margin-bottom: 30px;
+    text-align: left;
+    padding-left: 30px;
   }
 
   &__content {

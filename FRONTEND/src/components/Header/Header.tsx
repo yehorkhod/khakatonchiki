@@ -1,5 +1,4 @@
 import { NavLink } from 'react-router-dom';
-import { useState, useEffect } from 'react';
 import './Header.scss';
 // import Logo from '../../../public/img/header_components/Logo.svg?react';
 // import Favourites from '../../../public/img/header_components/Favourites.svg?react';
@@ -10,17 +9,6 @@ import './Header.scss';
 // import classnames from 'classnames';
 
 export const Header = () => {
-  const mobileScreen: number = 640;
-  const [isMobile, checkIsMobile] = useState(window.innerWidth < mobileScreen);
-
-  const handleResize = () => {
-    if (window.innerWidth < mobileScreen) {
-      checkIsMobile(true);
-    } else {
-      checkIsMobile(false);
-    }
-  };
-
   const chooseActivePage = ({ isActive }: { isActive: boolean }) =>
     isActive ? 'header__nav_link header__is-active' : 'header__nav_link';
 
@@ -28,10 +16,6 @@ export const Header = () => {
     isActive ?
       'header__buttons_element header__is-active'
     : 'header__buttons_element';
-
-  useEffect(() => {
-    window.addEventListener('resize', handleResize);
-  });
 
   return (
     <>
@@ -72,22 +56,18 @@ export const Header = () => {
           </NavLink>
         </nav>
         <div className="header__buttons">
-          {!isMobile && (
-            <>
-              <div className="profile-icon">
-                <NavLink
-                  to="/profile"
-                  className={chooseActivePageButton}
-                >
-                  <img
-                    src="/icons/acc-icon.png"
-                    alt="acc"
-                    className="profile-icon__img"
-                  />
-                </NavLink>
-              </div>
-            </>
-          )}
+          <div className="profile-icon">
+            <NavLink
+              to="/profile"
+              className={chooseActivePageButton}
+            >
+              <img
+                src="/icons/acc-icon.png"
+                alt="acc"
+                className="profile-icon__img"
+              />
+            </NavLink>
+          </div>
         </div>
       </header>
     </>

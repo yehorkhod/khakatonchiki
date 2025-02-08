@@ -1,0 +1,65 @@
+[
+  {
+    "id": "quest1",
+    "title": "Математичний виклик",
+    "description": "Виріши серію завдань з математики та фізики.",
+    "taskCount": 5,
+    "timeLimit": 30,
+    "media": [
+      { "type": "text", "content": "Розв'яжи рівняння: x² + 3x - 4 = 0." },
+      { "type": "image", "content": "math_problem_image.jpg" },
+      { "type": "video", "content": "math_tutorial.mp4" }
+    ],
+    "questions": [
+      { "type": "open", "question": "Як розв'язати це рівняння?" },
+      { "type": "multipleChoice", "question": "Що таке похідна функції?", "options": ["Число", "Процес", "Теорема"] }
+    ],
+    "rating": 4.7,
+    "feedback": [
+      { "user": "user123", "rating": 5, "comment": "Чудові завдання!" },
+      { "user": "user456", "rating": 4, "comment": "Цікаві задачі." }
+    ]
+  },
+  {
+    "id": "quest2",
+    "title": "Загублені у часі",
+    "description": "Розшифруй стародавні записи та розкрий таємницю зниклого міста.",
+    "taskCount": 7,
+    "timeLimit": 45,
+    "media": [
+      { "type": "text", "content": "Знайди приховані символи у цьому написі." },
+      { "type": "image", "content": "ancient_text.jpg" },
+      { "type": "video", "content": "history_mystery.mp4" }
+    ],
+    "questions": [
+      { "type": "open", "question": "Який рік зазначений на артефакті?" },
+      { "type": "multipleChoice", "question": "Яка цивілізація залишила цей напис?", "options": ["Майя", "Шумери", "Єгиптяни"] }
+    ],
+    "rating": 4.8,
+    "feedback": [
+      { "user": "historyFan", "rating": 5, "comment": "Дуже атмосферний квест!" },
+      { "user": "puzzleSolver", "rating": 4, "comment": "Було складно, але цікаво." }
+    ]
+  },
+  {
+    "id": "quest3",
+    "title": "Космічна місія",
+    "description": "Допоможи команді астронавтів виконати місію на Марсі.",
+    "taskCount": 6,
+    "timeLimit": 35,
+    "media": [
+      { "type": "text", "content": "Обери правильну траєкторію для посадки на Марс." },
+      { "type": "image", "content": "mars_surface.jpg" },
+      { "type": "video", "content": "space_mission.mp4" }
+    ],
+    "questions": [
+      { "type": "open", "question": "Яка мінімальна швидкість для виходу на орбіту Марса?" },
+      { "type": "multipleChoice", "question": "Який газ домінує в атмосфері Марса?", "options": ["Кисень", "Азот", "Вуглекислий газ"] }
+    ],
+    "rating": 4.9,
+    "feedback": [
+      { "user": "astroGeek", "rating": 5, "comment": "Я відчув себе справжнім астронавтом!" },
+      { "user": "spaceFan", "rating": 5, "comment": "Один з найкращих квестів!" }
+    ]
+  }
+]

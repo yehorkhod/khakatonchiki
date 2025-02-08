@@ -5,16 +5,16 @@
   position: sticky;
   top: 0;
   background-color: white;
-  justify-content: right;
+  justify-content: space-between;
   align-items: center;
   display: flex;
-  gap: $header-element-gap;
-  height: $header-height;
-  border-bottom: 1px solid red;
+  gap: 24px;
+  height: 64px;
+  border-bottom: 1px solid #333;
   z-index: 1000;
 
   &__logo {
-    padding: 0 $header-padding;
+    padding: 0 23px;
     margin-right: 10px;
     &--img {
       width: 35px;
@@ -24,7 +24,7 @@
 
   &__nav {
     display: flex;
-    gap: $header-nav-gap;
+    gap: 64px;
     height: 100%;
     margin-left: auto;
 
@@ -41,15 +41,16 @@
       line-height: 11px;
       letter-spacing: 0.04em;
       height: 100%;
+      transition: color 0.2s ease;
 
       &:hover {
-        color: red;
+        color: #003366;
       }
     }
   }
 
   &__is-active {
-    color: red;
+    color: #4f84e7;
 
     &::after {
       content: '';
@@ -59,8 +60,7 @@
       height: 4px;
       bottom: 0;
       left: 0;
-      background-color: red;
-      // background-color: $primary-color;
+      background-color: #4f84e7;
       animation-duration: 0.5s;
       animation-name: select;
     }
@@ -73,53 +73,20 @@
     align-items: center;
 
     &_element {
-      padding: $header-padding;
+      padding: 23px;
       position: relative;
       display: inline-block;
-      border-left: 1px solid red;
+      border-left: 1px solid #333;
       color: black;
       cursor: pointer;
       height: 64px;
       // height: 100%
       // min-height: 64px;
+      transition: transform 0.2s ease;
 
-      @include on-tablet {
-        height: 52px;
-        transform: translateY(-5px);
+      &:hover {
+        transform: translateY(-2px); 
       }
-    }
-  }
-
-  @include on-tablet {
-    &__nav {
-      gap: 80px;
-    }
-  }
-
-  @include on-desktop {
-    $header-element-gap: 24px;
-    $header-nav-gap: 64px;
-    $header-height: 64px;
-    $header-padding: 23px;
-    $header-logo-scale: 1;
-
-    gap: $header-element-gap;
-    height: 64px;
-
-    &__logo {
-      padding: 0 $header-padding;
-      transform: scale($header-logo-scale);
-    }
-
-    &__nav {
-      gap: 250px;
-    }
-
-    &__buttons_element {
-      padding: $header-padding;
-      // min-height: 64px
-      // height: 100%
-      // padding: 19px;
     }
   }
 }
@@ -130,11 +97,6 @@
   &__img {
     width: 30px;
     height: auto;
-    @include on-tablet {
-
-    }
-    @include on-desktop {
-      transform: translateY(-5px);
-    }
+    transform: translateY(-5px);
   }
 }

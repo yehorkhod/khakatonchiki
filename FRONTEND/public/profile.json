@@ -1,0 +1,12 @@
+{
+  "profilePicture": "/images/profile-picture.jpg",
+  "name": "Іван Іванов",
+  "email": "ivan.ivanov@example.com",
+  "createdQuests": [
+    { "questId": "quest1", "title": "Математичний виклик" },
+    { "questId": "quest2", "title": "Фізичний тест" }
+  ],
+  "completedQuests": [
+    { "questId": "quest3", "title": "Пошук у лісі" }
+  ]
+}
