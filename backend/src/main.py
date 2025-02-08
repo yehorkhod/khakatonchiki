@@ -1,6 +1,5 @@
 from flask import Blueprint, jsonify
 from flask_login import login_required, current_user
-from backend.src.api import app, db, sock
 
 main = Blueprint('main', __name__)
 

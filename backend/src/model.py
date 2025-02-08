@@ -1,7 +1,6 @@
 import uuid
-
-from backend.src.api import db
 from flask_login import UserMixin
+from .api import db
 
 class User(UserMixin, db.Model):
     __tablename__ = 'users'

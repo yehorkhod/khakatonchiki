@@ -24,8 +24,8 @@ app: Flask = Flask(__name__)
 app.config.from_object(Config)
 
 sock: Sock = Sock(app)
-db: SQLAlchemy = SQLAlchemy(app)
 
+db: SQLAlchemy = SQLAlchemy(app)
 db.init_app(app)
 
 # blueprint for auth routes in our app

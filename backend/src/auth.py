@@ -1,8 +1,8 @@
-from flask import Blueprint, jsonify, request, flash, redirect, url_for
+from flask import Blueprint, jsonify, request
 from flask_login import login_user, logout_user, login_required
 from werkzeug.security import generate_password_hash, check_password_hash
-from backend.src.model import User
-from backend.src.api import db
+from .model import User
+from .api import db
 
 auth = Blueprint('auth', __name__)
 
@@ -43,7 +43,11 @@ def reqistrate():
         return jsonify({"error": "User with this email or username already exists"}), 409
 
     # create a new user with the form data. Hash the password so the plaintext version isn't saved.
-    new_user = User(email=email,username=username,password=generate_password_hash(password, method='sha256'))
+    new_user = User(
+        email=email,
+        username=username,
+        password=generate_password_hash(password, method='sha256')
+    )
 
     # add the new user to the database
     db.session.add(new_user)
