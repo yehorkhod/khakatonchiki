@@ -1,11 +1,16 @@
-from . import db
+import uuid
 
-class User(db.Model):
+from backend.src.api import db
+from flask_login import UserMixin
+
+class User(UserMixin, db.Model):
     __tablename__ = 'users'
 
     id = db.Column(db.UUID, primary_key=True, default=uuid.uuid4)
     username = db.Column(db.String(50), unique=True, nullable=False)
+    password = db.Column(db.String(150), nullable=False)
     email = db.Column(db.String(150), unique=True, nullable=False)
+    rating = db.Column(db.Numeric(5,2))
 
     quests = db.relationship('Quest', backref='author', lazy=True, cascade="all, delete")
 
@@ -20,3 +25,4 @@ class Quest(db.Model):
     duration = db.Column(db.Interval)
     tasks = db.Column(db.JSON)
     comments = db.Column(db.JSON)
+    rating = db.Column(db.Numeric(5,2))
