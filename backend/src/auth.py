@@ -28,7 +28,7 @@ def login():
     return jsonify({"message": "Login successful", "user": {"email": user.email, "username": user.username}}), 200
 
 @auth.route('/reqister', methods=['POST'])
-def reqistrate():
+def register():
     data = request.json
     email = data.get('email')
     username = data.get('username')
