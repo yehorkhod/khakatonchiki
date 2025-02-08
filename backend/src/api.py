@@ -14,7 +14,7 @@ class Config:
         f"{os.getenv('POSTGRES_USER')}"
         ":"
         f"{os.getenv('POSTGRES_PASSWORD')}"
-        "@localhost/"
+        "@db/"
         f"{os.getenv('POSTGRES_DB')}"
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
@@ -26,7 +26,6 @@ app.config.from_object(Config)
 sock: Sock = Sock(app)
 
 db: SQLAlchemy = SQLAlchemy(app)
-db.init_app(app)
 
 # blueprint for auth routes in our app
 from .auth import auth as auth_blueprint
