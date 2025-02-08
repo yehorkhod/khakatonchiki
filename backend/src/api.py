@@ -11,11 +11,11 @@ dotenv.load_dotenv()
 class Config:
     SQLALCHEMY_DATABASE_URI = (
         "postgresql://"
-        f"{os.getenv('POSTGRE_USER')}"
+        f"{os.getenv('POSTGRES_USER')}"
         ":"
-        f"{os.getenv('POSTGRE_PASSWORD')}"
+        f"{os.getenv('POSTGRES_PASSWORD')}"
         "@localhost/"
-        f"{os.getenv('POSTGRE_DB')}"
+        f"{os.getenv('POSTGRES_DB')}"
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
@@ -24,18 +24,14 @@ app: Flask = Flask(__name__)
 app.config.from_object(Config)
 
 sock: Sock = Sock(app)
+
 db: SQLAlchemy = SQLAlchemy(app)
+db.init_app(app)
 
-# Routes
-@app.route('/home')
-def home():
-    return 'Hi mom!'
+# blueprint for auth routes in our app
+from .auth import auth as auth_blueprint
+app.register_blueprint(auth_blueprint)
 
-@sock.route('/echo')
-def echo(ws):
-    while True:
-        data = ws.receive()
-        ws.send(data)
-
-if __name__ == '__main__':
-    app.run(debug=True)
+# blueprint for non-auth parts of app
+from .main import main as main_blueprint
+app.register_blueprint(main_blueprint)
