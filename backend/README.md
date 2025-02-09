@@ -32,7 +32,8 @@ Response:
   "user": {
     "id": "uuid",
     "email": "user@example.com",
-    "username": "user123"
+    "username": "user123",
+    "user_image": "<svg>...</svg>"
   }
 }
 ~~~
@@ -60,6 +61,7 @@ Response:
     "id": "uuid",
     "email": "user@example.com",
     "username": "user123"
+    "user_image": "<svg>...</svg>"
   }
 }
 ~~~
@@ -104,7 +106,8 @@ Response:
 {
   "username": "user123",
   "email": "user@example.com",
-  "rating": "4.5"
+  "rating": "4.5",
+  "user_image": "<svg>...</svg>"
 }
 ~~~
 

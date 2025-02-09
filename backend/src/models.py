@@ -10,6 +10,7 @@ class User(UserMixin, db.Model):
     password = db.Column(db.String(256), nullable=False)
     email = db.Column(db.String(150), unique=True, nullable=False)
     rating = db.Column(db.Numeric(5,2))
+    user_image = db.Column(db.Text)
     quests = db.relationship('Quest', backref='author', lazy=True, cascade="all, delete")
 
 class Quest(db.Model):

@@ -4,6 +4,7 @@ from flask_login import (
     login_user,
     logout_user
 )
+import requests
 from werkzeug.security import generate_password_hash, check_password_hash
 from .extensions import db, login_manager
 from .models import User
@@ -29,7 +30,15 @@ def login():
         return jsonify({"error": "Invalid email or password"}), 401
 
     login_user(user, remember=remember)
-    return jsonify({"message": "Login successful", "user": {"id": user.id, "email": user.email, "username": user.username}}), 200
+    return jsonify({
+        "message": "Login successful",
+        "user": {
+            "id": user.id,
+            "email": user.email,
+            "username": user.username,
+            "user_image": user.user_image,
+        }
+    }), 200
 
 @auth_blueprint.route('/register', methods=['POST'])
 def register():
@@ -45,11 +54,21 @@ def register():
     if existing_user:
         return jsonify({"error": "User already exists"}), 409
 
-    new_user = User(email=email, username=username, password=generate_password_hash(password))
+    user_image = requests.get(f"https://api.dicebear.com/9.x/icons/svg?seed={username}").content.decode('utf-8')
+
+    new_user = User(email=email, username=username, password=generate_password_hash(password), user_image=user_image)
     db.session.add(new_user)
     db.session.commit()
 
-    return jsonify({"message": "User registered successfully", "user": {"id": new_user.id, "email": new_user.email, "username": new_user.username}}), 201
+    return jsonify({
+        "message": "User registered successfully",
+        "user": {
+            "id": new_user.id,
+            "email": new_user.email,
+            "username": new_user.username,
+            "user_image": new_user.user_image,
+        }
+    }), 201
 
 @auth_blueprint.route('/logout', methods=['POST'])
 @login_required
