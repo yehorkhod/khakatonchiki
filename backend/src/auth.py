@@ -12,8 +12,8 @@ from .models import User
 auth_blueprint: Blueprint = Blueprint('auth', __name__, url_prefix='/api/auth')
 
 @login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(user_id)
+def load_user(id):
+    return User.query.get(id)
 
 @auth_blueprint.route('/login', methods=['POST'])
 def login():
