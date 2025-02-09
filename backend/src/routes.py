@@ -13,5 +13,10 @@ def home():
 @main_blueprint.route('/users/me', methods=['GET'])
 @login_required
 def profile():
-    return jsonify({"username": current_user.username, "email": current_user.email, "rating": str(current_user.rating)})
+    return jsonify({
+        "username": current_user.username,
+        "email": current_user.email,
+        "rating": str(current_user.rating),
+        "user_image": current_user.user_image,
+    })
 

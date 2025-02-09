@@ -5,7 +5,7 @@ import psycopg2
 
 dotenv.load_dotenv()
 
-BASE_URL = "http://localhost:8000"  # Adjust if needed
+BASE_URL = "http://localhost:8000/api"  # Adjust if needed
 SQLALCHEMY_DATABASE_URI = (
     "postgresql://"
     f"{os.getenv('POSTGRES_USER')}"
@@ -29,7 +29,7 @@ conn.close()
 
 
 # Test Home Route
-home_response = requests.get(f"{BASE_URL}/api/home")
+home_response = requests.get(f"{BASE_URL}/home")
 print("Home Response:", home_response.json())
 
 # Test Register
@@ -38,8 +38,8 @@ register_data = {
     "username": "testuser",
     "password": "securepassword"
 }
-register_response = requests.post(f"{BASE_URL}/register", json=register_data)
-print("Register Response:", register_response.json())
+register_response = requests.post(f"{BASE_URL}/auth/register", json=register_data)
+print("Register Response:", register_response.content)
 
 # Test Login
 login_data = {
@@ -47,18 +47,18 @@ login_data = {
     "password": "securepassword"
 }
 session = requests.Session()
-login_response = session.post(f"{BASE_URL}/login", json=login_data)
+login_response = session.post(f"{BASE_URL}/auth/login", json=login_data)
 print("Login Response:", login_response.json())
 
 # Test Accessing User Profile (Requires Authentication)
-profile_response = session.get(f"{BASE_URL}/api/user")
+profile_response = session.get(f"{BASE_URL}/users/me")
 print("Profile Response:", profile_response.json())
 
 # Test Logout
-logout_response = session.post(f"{BASE_URL}/logout")
+logout_response = session.post(f"{BASE_URL}/auth/logout")
 print("Logout Response:", logout_response.json())
 
 # Test Home Route
-home_response = requests.get(f"{BASE_URL}/api/home")
+home_response = requests.get(f"{BASE_URL}/home")
 print("Home Response:", home_response.json())
 

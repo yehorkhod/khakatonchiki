@@ -11,7 +11,8 @@ CREATE TABLE IF NOT EXISTS users (
     username VARCHAR(50) NOT NULL UNIQUE,
     password VARCHAR(256) NOT NULL,
     email VARCHAR(150) NOT NULL UNIQUE,
-    rating NUMERIC(5,2)
+    rating NUMERIC(5,2),
+    user_image TEXT
 );
 
 -- Create quests table
