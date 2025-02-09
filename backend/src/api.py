@@ -1,41 +1,21 @@
-import os
 from flask import Flask
-from flask_sock import Sock
-from flask_sqlalchemy import SQLAlchemy
-import dotenv
-
-# Load environment variables
-dotenv.load_dotenv()
-
-# Define the configuration class
-class Config:
-    SQLALCHEMY_DATABASE_URI = (
-        "postgresql://"
-        f"{os.getenv('POSTGRE_USER')}"
-        ":"
-        f"{os.getenv('POSTGRE_PASSWORD')}"
-        "@localhost/"
-        f"{os.getenv('POSTGRE_DB')}"
-    )
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
+from .config import Config
+from .auth import auth_blueprint
+from .routes import main_blueprint
+from .extensions import db, sock, login_manager
 
 # API setup
 app: Flask = Flask(__name__)
 app.config.from_object(Config)
 
-sock: Sock = Sock(app)
-db: SQLAlchemy = SQLAlchemy(app)
+# Initialize extensions
+db.init_app(app)
+sock.init_app(app)
+login_manager.init_app(app)
 
-# Routes
-@app.route('/home')
-def home():
-    return 'Hi mom!'
-
-@sock.route('/echo')
-def echo(ws):
-    while True:
-        data = ws.receive()
-        ws.send(data)
+# Register blueprints
+app.register_blueprint(auth_blueprint)
+app.register_blueprint(main_blueprint)
 
 if __name__ == '__main__':
     app.run(debug=True)

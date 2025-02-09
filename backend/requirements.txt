@@ -1,6 +1,8 @@
-Flask
+requests
 Gunicorn
+Flask
 flask-sock
 Flask-SQLAlchemy
+Flask-Login
 psycopg2-binary
 python_dotenv

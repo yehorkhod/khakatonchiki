@@ -1,11 +1,18 @@
 -- Enable UUID extension if not already enabled
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
+-- Drop existing tables to reset the database
+DROP TABLE IF EXISTS quests CASCADE;
+DROP TABLE IF EXISTS users CASCADE;
+
 -- Create users table
 CREATE TABLE IF NOT EXISTS users (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     username VARCHAR(50) NOT NULL UNIQUE,
-    email VARCHAR(150) NOT NULL UNIQUE
+    password VARCHAR(256) NOT NULL,
+    email VARCHAR(150) NOT NULL UNIQUE,
+    rating NUMERIC(5,2),
+    user_image TEXT
 );
 
 -- Create quests table
@@ -17,5 +24,6 @@ CREATE TABLE IF NOT EXISTS quests (
     number_of_task INTEGER,
     duration INTERVAL,
     tasks JSON,
-    comments JSON
+    comments JSON,
+    rating NUMERIC(5,2)
 );
