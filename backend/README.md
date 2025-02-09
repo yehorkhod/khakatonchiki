@@ -20,7 +20,7 @@ Request Body:
 {
   "email": "user@example.com",
   "password": "securepassword",
-  "remember": true
+  "remember": true,
 }
 ~~~
 
@@ -33,8 +33,8 @@ Response:
     "id": "uuid",
     "email": "user@example.com",
     "username": "user123",
-    "user_image": "<svg>...</svg>"
-  }
+    "user_image": "<svg>...</svg>",
+  },
 }
 ~~~
 
@@ -48,7 +48,7 @@ Request Body:
 {
   "email": "user@example.com",
   "username": "user123",
-  "password": "securepassword"
+  "password": "securepassword",
 }
 ~~~
 
@@ -60,9 +60,9 @@ Response:
   "user": {
     "id": "uuid",
     "email": "user@example.com",
-    "username": "user123"
-    "user_image": "<svg>...</svg>"
-  }
+    "username": "user123",
+    "user_image": "<svg>...</svg>",
+  },
 }
 ~~~
 
@@ -76,7 +76,7 @@ Response:
 
 ~~~json
 {
-  "message": "Logout successful"
+  "message": "Logout successful",
 }
 ~~~
 
@@ -90,7 +90,7 @@ Response:
 
 ~~~json
 {
-  "message": "Welcome to the API!"
+  "message": "Welcome to the API!",
 }
 ~~~
 
@@ -107,7 +107,31 @@ Response:
   "username": "user123",
   "email": "user@example.com",
   "rating": "4.5",
-  "user_image": "<svg>...</svg>"
+  "user_image": "<svg>...</svg>",
+}
+~~~
+
+### 6. Get User Information By Id
+
+Endpoint: POST /api/users/user
+
+Request Body:
+
+~~~json
+{
+  "id": "uuid",
+}
+~~~
+
+Response:
+
+~~~json
+{
+  "id": "uuid",
+  "email": "user@example.com",
+  "username": "user123",
+  "rating": "4.5",
+  "user_image": "<svg>...</svg>",
 }
 ~~~
 
