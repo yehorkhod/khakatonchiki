@@ -135,6 +135,77 @@ Response:
 }
 ~~~
 
++ completed/created quests
+title
+description
+rating
+task_count
+time_limit
+
+### 7. ...
+
+Endpoint: /api/create_quest
+
+Headers: Requires authentication
+
+Request Body:
+
+~~~json
+{
+  quest: {
+    title:
+    description:
+    duration:
+  };
+  task: [
+    { },
+    ...
+  ];
+}
+~~~
+
+### 8. ...
+
+Endpoint: /api/finish_quest
+
+Headers: Requires authentication
+
+
+~~~json
+{
+  quest_id
+}
+~~~
+
+### 8. ...
+
+Endpoint: /api/finish_quest
+
+Headers: Requires authentication
+
+~~~json
+{
+  quest_id
+}
+~~~
+
+
+### 8. ...
+
+Endpoint: /api/leave_review
+
+Headers: Requires authentication
+
+~~~json
+{
+  quest_id
+  rating
+  comment
+}
+~~~
+
+
+
 # Notes
 
 All authentication-related endpoints require JSON requests.

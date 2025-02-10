@@ -1,11 +1,12 @@
--- Enable UUID extension if not already enabled
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
--- Drop existing tables to reset the database
+DROP TABLE IF EXISTS comments CASCADE;
+DROP TABLE IF EXISTS tasks CASCADE;
+DROP TABLE IF EXISTS sessions CASCADE;
 DROP TABLE IF EXISTS quests CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
 
--- Create users table
+-- TODO: add description
 CREATE TABLE IF NOT EXISTS users (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     username VARCHAR(50) NOT NULL UNIQUE,
@@ -15,20 +16,34 @@ CREATE TABLE IF NOT EXISTS users (
     user_image TEXT
 );
 
--- Create quests table
 CREATE TABLE IF NOT EXISTS quests (
     id BIGSERIAL PRIMARY KEY,
-    author_uuid UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    author_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     title VARCHAR(200) NOT NULL,
     description VARCHAR(500),
-    task_count INTEGER,
+    number_of_tasks INTEGER NOT NULL,
     duration INTERVAL,
-    --tasks JSON,
-    comments JSON,
-    rating NUMERIC(5,2)
+    rating NUMERIC(5,2) DEFAULT 0
 );
 
--- Create tasks table
+CREATE TABLE IF NOT EXISTS comments (
+    id BIGSERIAL PRIMARY KEY,
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    quest_id BIGINT NOT NULL REFERENCES quests(id) ON DELETE CASCADE,
+    text TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
 CREATE TABLE IF NOT EXISTS tasks (
     id BIGSERIAL PRIMARY KEY,
-    quest_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    quest_id BIGINT NOT NULL REFERENCES quests(id) ON DELETE CASCADE,
+    task JSONB NOT NULL,
+    position INTEGER NOT NULL CHECK (position > 0)
+);
+
+CREATE TABLE IF NOT EXISTS sessions (
+    id BIGSERIAL PRIMARY KEY,
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    quest_id BIGINT NOT NULL REFERENCES quests(id) ON DELETE CASCADE,
+    rating NUMERIC(5,2) CHECK (rating >= 0 AND rating <= 5)
+);
