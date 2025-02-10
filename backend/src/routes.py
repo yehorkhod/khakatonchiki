@@ -3,7 +3,7 @@ from flask_login import (
     login_required,
     current_user,
 )
-from .models import User, Quest, Task
+from .models import User, Quest, Task, Comment, Session
 from .extensions import db
 
 main_blueprint: Blueprint = Blueprint('main', __name__, url_prefix='/api')
@@ -15,11 +15,39 @@ def home():
 @main_blueprint.route('/users/me', methods=['GET'])
 @login_required
 def profile():
+    created_quests = Quest.query.filter_by(author_id=current_user.id).all()
+
+    completed_sessions = Session.query.filter_by(user_id=current_user.id).all()
+    completed_quest_id = [session.quest_id for session in completed_sessions]
+    completed_quests = Quest.query.filter(Quest.id.in_(completed_quest_id)).all()
+
     return jsonify({
         "username": current_user.username,
         "email": current_user.email,
         "rating": str(current_user.rating),
         "user_image": current_user.user_image,
+        "created_quests": [
+            {
+                "id": quest.id,
+                "title": quest.title,
+                "description": quest.description,
+                "number_of_tasks": quest.number_of_tasks,
+                "duration": str(quest.duration) if quest.duration else None,
+                "rating": str(quest.rating)
+            }
+            for quest in created_quests
+        ],
+        "completed_quests": [
+            {
+                "id": quest.id,
+                "title": quest.title,
+                "description": quest.description,
+                "number_of_tasks": quest.number_of_tasks,
+                "duration": str(quest.duration) if quest.duration else None,
+                "rating": str(quest.rating)
+            }
+            for quest in completed_quests
+        ]
     })
 
 @main_blueprint.route('/users/user', methods=['POST'])
@@ -35,11 +63,39 @@ def user():
     if not user:
         return jsonify({"error": "User not found"}), 404
 
+    created_quests = Quest.query.filter_by(author_id=id).all()
+
+    completed_sessions = Session.query.filter_by(user_id=id).all()
+    completed_quest_id = [session.quest_id for session in completed_sessions]
+    completed_quests = Quest.query.filter(Quest.id.in_(completed_quest_id)).all()
+
     return jsonify({
         "username": user.username,
         "email": user.email,
         "rating": str(user.rating),
         "user_image": user.user_image,
+        "created_quests": [
+            {
+                "id": quest.id,
+                "title": quest.title,
+                "description": quest.description,
+                "number_of_tasks": quest.number_of_tasks,
+                "duration": str(quest.duration) if quest.duration else None,
+                "rating": str(quest.rating)
+            }
+            for quest in created_quests
+        ],
+        "completed_quests": [
+            {
+                "id": quest.id,
+                "title": quest.title,
+                "description": quest.description,
+                "number_of_tasks": quest.number_of_tasks,
+                "duration": str(quest.duration) if quest.duration else None,
+                "rating": str(quest.rating)
+            }
+            for quest in completed_quests
+        ]
     }), 200
 
 @main_blueprint.route('/create_quest', methods=['POST'])
@@ -53,13 +109,17 @@ def create_quest():
     db.session.add(new_quest)
 
     if 'tasks' in data:
-        for task_data in data['tasks']:
-            new_task = Task(quest_id=new_quest.id, type=task_data['type'], content=task_data['content'])
+        for index, task_data in enumerate(data['tasks'], start=1):
+            new_task = Task(
+                quest_id=new_quest.id,
+                task=task_data,  #JSONB
+                position=index
+            )
             db.session.add(new_task)
-            new_quest.task_count += 1
+            new_quest.number_of_tasks += 1
 
     db.session.commit()
-    return jsonify({"message": "Квест и задания созданы", "quest_id": new_quest.id})
+    return jsonify({"message": "The quest and tasks have been created", "quest_id": new_quest.id})
 
 @main_blueprint.route('/quest/<int:quest_id>', methods=['GET'])
 @login_required
@@ -67,9 +127,10 @@ def get_quest(quest_id):
     quest = Quest.query.get_or_404(quest_id)
     return jsonify({
         "id": quest.id,
-        "name": quest.name,
+        "title": quest.title,
+
         "author_id": quest.author_id,
-        "task_count": quest.task_count,
+        "number_of_tasks": quest.number_of_tasks,
     })
 
 @main_blueprint.route('/quest/<int:quest_id>/tasks', methods=['GET'])
@@ -83,11 +144,64 @@ def get_tasks(quest_id):
         "tasks": tasks_data
     })
 
-
 @main_blueprint.route('/quests/top', methods=['GET'])
 @login_required
-def get_top_quests():
+def get_quests():
     top_quests = Quest.query.order_by(Quest.rating.desc()).limit(10).all()
     quests_data = [{"id": q.id, "name": q.name, "rating": q.rating} for q in top_quests]
 
     return jsonify({"top_quests": quests_data})
+
+@main_blueprint.route('/finish_quest', methods=['POST'])
+@login_required
+def finish_quest():
+    data = request.json
+    user_id = data.get("user_id")
+    quest_id = data.get("quest_id")
+
+    if not user_id or not quest_id:
+        return jsonify({"error": "Missing user_id or quest_id"}), 400
+
+    new_session = Session(user_id=user_id, quest_id=quest_id)
+    db.session.add(new_session)
+    db.session.commit()
+
+    return jsonify({"message": "Session created successfully"}), 201
+
+@main_blueprint.route('/leave_review', methods=['POST'])
+@login_required
+def leave_review():
+    data = request.json
+    user_id = data.get("user_id")
+    quest_id = data.get("quest_id")
+    rating = data.get("rating")
+    comment_text = data.get("comment")
+
+    if not user_id or not quest_id:
+        return jsonify({"error": "Missing user_id or quest_id"}), 400
+
+    session = Session.query.filter_by(user_id=user_id, quest_id=quest_id).first()
+    if not session:
+        return jsonify({"error": "Session not found"}), 404
+
+    quest = Quest.query.get(quest_id)
+    if not quest:
+        return jsonify({"error": "Quest not found"}), 404
+
+    author = User.query.get(quest.author_id)
+    if not author:
+        return jsonify({"error": "Author not found"}), 404
+
+    if rating is not None:
+        session.rating = rating
+        db.session.commit()
+
+        quest.recalculate_rating()
+        author.recalculate_rating()
+
+    if comment_text:
+        new_comment = Comment(user_id=user_id, quest_id=quest_id, text=comment_text)
+        db.session.add(new_comment)
+        db.session.commit()
+
+    return jsonify({"message": "Session updated successfully"}), 200
