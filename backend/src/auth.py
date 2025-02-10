@@ -1,40 +1,46 @@
 from flask import Blueprint, jsonify, request
-from flask_login import login_user, logout_user, login_required
+from flask_login import (
+    login_required,
+    login_user,
+    logout_user
+)
+import requests
 from werkzeug.security import generate_password_hash, check_password_hash
-from .model import User
-from .api import db
+from .extensions import db, login_manager
+from .models import User
 
-auth = Blueprint('auth', __name__)
+auth_blueprint: Blueprint = Blueprint('auth', __name__, url_prefix='/api/auth')
 
-@auth.route('/login', methods=['POST'])
+@login_manager.user_loader
+def load_user(id):
+    return User.query.get(id)
+
+@auth_blueprint.route('/login', methods=['POST'])
 def login():
-    data = request.json  # waiting JSON-query from frontend
+    data = request.json
     email = data.get('email')
     password = data.get('password')
-    remember = data.get('remember', False)  # default False
+    remember = data.get('remember', False)
 
     if not email or not password:
-        return jsonify({"error": "Password and email are required"}), 400
+        return jsonify({"error": "Email and password are required"}), 400
 
     user = User.query.filter_by(email=email).first()
-
-    # check if the user actually exists
-    # take the user-supplied password, hash it, and compare it to the hashed password in the database
     if not user or not check_password_hash(user.password, password):
         return jsonify({"error": "Invalid email or password"}), 401
 
-    # if the above check passes, then we know the user has the right credentials
     login_user(user, remember=remember)
     return jsonify({
-        "message": "Login successful", 
+        "message": "Login successful",
         "user": {
             "id": user.id,
-            "email": user.email, 
-            "username": user.username
+            "email": user.email,
+            "username": user.username,
+            "user_image": user.user_image,
         }
     }), 200
 
-@auth.route('/register', methods=['POST'])
+@auth_blueprint.route('/register', methods=['POST'])
 def register():
     data = request.json
     email = data.get('email')
@@ -44,32 +50,27 @@ def register():
     if not email or not username or not password:
         return jsonify({"error": "All fields are required"}), 400
 
-    existing_user = User.query.filter((User.email == email) | (User.username == username)).first()  # if this returns a user, then the email/username already exists in database
-
+    existing_user = User.query.filter((User.email == email) | (User.username == username)).first()
     if existing_user:
-        return jsonify({"error": "User with this email or username already exists"}), 409
+        return jsonify({"error": "User already exists"}), 409
 
-    # create a new user with the form data. Hash the password so the plaintext version isn't saved.
-    new_user = User(
-        email=email,
-        username=username,
-        password=generate_password_hash(password, method='sha256')
-    )
+    user_image = requests.get(f"https://api.dicebear.com/9.x/icons/svg?seed={username}").content.decode('utf-8')
 
-    # add the new user to the database
+    new_user = User(email=email, username=username, password=generate_password_hash(password), user_image=user_image)
     db.session.add(new_user)
     db.session.commit()
 
     return jsonify({
-        "message": "User registered successfully", 
+        "message": "User registered successfully",
         "user": {
             "id": new_user.id,
-            "email": new_user.email, 
-            "username": new_user.username
+            "email": new_user.email,
+            "username": new_user.username,
+            "user_image": new_user.user_image,
         }
     }), 201
 
-@auth.route('/logout', methods=['POST'])
+@auth_blueprint.route('/logout', methods=['POST'])
 @login_required
 def logout():
     logout_user()
