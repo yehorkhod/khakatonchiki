@@ -20,8 +20,17 @@ class Quest(db.Model):
     author_uuid = db.Column(db.UUID, db.ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
     title = db.Column(db.String(200), nullable=False)
     description = db.Column(db.String(500))
-    number_of_tasks = db.Column(db.Integer)
+    task_count = db.Column(db.Integer)
     duration = db.Column(db.Interval)
-    tasks = db.Column(db.JSON)
+    #tasks = db.Column(db.JSON)
     comments = db.Column(db.JSON)
     rating = db.Column(db.Numeric(5,2))
+
+class Task(db.Model):
+    __tablename__ = 'tasks'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    quest_id = db.Column(db.Integer, db.ForeignKey('quest.id', ondelete='CASCADE'), nullable=False)
+    type = db.Column(db.String(50), nullable=False)  # open_answer, test_question, find_object
+    content = db.Column(db.JSON, nullable=False)
+

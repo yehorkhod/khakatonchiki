@@ -21,9 +21,14 @@ CREATE TABLE IF NOT EXISTS quests (
     author_uuid UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     title VARCHAR(200) NOT NULL,
     description VARCHAR(500),
-    number_of_task INTEGER,
+    task_count INTEGER,
     duration INTERVAL,
-    tasks JSON,
+    --tasks JSON,
     comments JSON,
     rating NUMERIC(5,2)
 );
+
+-- Create tasks table
+CREATE TABLE IF NOT EXISTS tasks (
+    id BIGSERIAL PRIMARY KEY,
+    quest_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
