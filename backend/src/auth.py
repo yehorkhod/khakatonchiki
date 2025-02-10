@@ -1,11 +1,13 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, url_for
 from flask_login import (
     login_required,
     login_user,
     logout_user
 )
+from flask_dance.contrib.google import google
 import requests
 from werkzeug.security import generate_password_hash, check_password_hash
+from .api import google_bp
 from .extensions import db, login_manager
 from .models import User
 
@@ -75,3 +77,36 @@ def register():
 def logout():
     logout_user()
     return jsonify({"message": "Logout successful"}), 200
+
+# Login with Google/Facebook
+
+@google_bp.route("/google")
+def google_login():
+    if not google.authorized:
+        return jsonify({"login_url": url_for("google.login", _external=True)})
+
+    resp = google.get("/oauth2/v1/userinfo")
+    if not resp.ok:
+        return jsonify({"error": "Failed to fetch user info"}), 400
+
+    user_info = resp.json()
+    email = user_info["email"]
+    google_id = user_info["id"]
+    username = user_info["name"]
+    user_image = user_info.get("picture")
+
+    # Check if the user is in the database
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        user = User(
+            username=username,
+            email=email,
+            oauth_provider="google",
+            oauth_id=google_id,
+            user_image=user_image
+        )
+        db.session.add(user)
+        db.session.commit()
+
+    login_user(user)
+    return jsonify({"message": "Login successful", "user": {"username": user.username, "email": user.email}})

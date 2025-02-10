@@ -7,7 +7,8 @@ class User(UserMixin, db.Model):
 
     id = db.Column(db.UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     username = db.Column(db.String(50), unique=True, nullable=False)
-    password = db.Column(db.String(256), nullable=False)
+    password = db.Column(db.String(256))
+    oauth_id = db.Column(db.String(100), unique=True)
     email = db.Column(db.String(150), unique=True, nullable=False)
     rating = db.Column(db.Numeric(5, 2))
     user_image = db.Column(db.Text)

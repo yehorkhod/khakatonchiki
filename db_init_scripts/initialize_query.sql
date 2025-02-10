@@ -10,7 +10,8 @@ DROP TABLE IF EXISTS users CASCADE;
 CREATE TABLE IF NOT EXISTS users (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     username VARCHAR(50) NOT NULL UNIQUE,
-    password VARCHAR(256) NOT NULL,
+    password VARCHAR(256),
+    oauth_id VARCHAR(50)  UNIQUE,
     email VARCHAR(150) NOT NULL UNIQUE,
     rating NUMERIC(5,2),
     user_image TEXT
