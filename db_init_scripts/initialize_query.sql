@@ -45,7 +45,5 @@ CREATE TABLE IF NOT EXISTS sessions (
     id BIGSERIAL PRIMARY KEY,
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     quest_id BIGINT NOT NULL REFERENCES quests(id) ON DELETE CASCADE,
-    tasks_finished INTEGER DEFAULT 0 CHECK (tasks_finished >= 0),
-    finished BOOLEAN DEFAULT FALSE,
     rating NUMERIC(5,2) CHECK (rating >= 0 AND rating <= 5)
 );
