@@ -17,5 +17,5 @@ login_manager.init_app(app)
 app.register_blueprint(auth_blueprint)
 app.register_blueprint(main_blueprint)
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(debug=True)

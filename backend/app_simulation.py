@@ -19,7 +19,9 @@ SQLALCHEMY_DATABASE_URI = (
 conn = psycopg2.connect(SQLALCHEMY_DATABASE_URI)
 cur = conn.cursor()
 
-cur.execute("SELECT column_name FROM information_schema.columns WHERE table_name = 'users';")
+cur.execute(
+    "SELECT column_name FROM information_schema.columns WHERE table_name = 'users';"
+)
 columns = cur.fetchall()
 columns = [column[0] for column in columns]
 print("Columns in the 'users' table:", columns)
@@ -36,17 +38,14 @@ print("Home Response:", home_response.json())
 register_data = {
     "email": "test@example.com",
     "username": "testuser",
-    "password": "securepassword"
+    "password": "securepassword",
 }
 register_response = requests.post(f"{BASE_URL}/auth/register", json=register_data)
 assert register_response.status_code == 201 or register_response.status_code == 409
 print("Register Response:", register_response.content)
 
 # Test Login
-login_data = {
-    "email": "test@example.com",
-    "password": "securepassword"
-}
+login_data = {"email": "test@example.com", "password": "securepassword"}
 session = requests.Session()
 login_response = session.post(f"{BASE_URL}/auth/login", json=login_data)
 assert login_response.status_code == 200
@@ -59,20 +58,17 @@ print("Profile Response:", profile_response.json())
 
 # Create quest
 for i in range(1, 4):
-    create_quest_response = session.post(f"{BASE_URL}/create_quest", json={
-        "title": "Test Quest",
-        "description": "This is a test quest",
-        "tasks": [
-            {
-                "description": "Task 1",
-                "answer": "Answer 1"
-            },
-            {
-                "description": "Task 2",
-                "answer": "Answer 2"
-            }
-        ],
-    })
+    create_quest_response = session.post(
+        f"{BASE_URL}/create_quest",
+        json={
+            "title": "Test Quest",
+            "description": "This is a test quest",
+            "tasks": [
+                {"description": "Task 1", "answer": "Answer 1"},
+                {"description": "Task 2", "answer": "Answer 2"},
+            ],
+        },
+    )
 print("Create Quest Response:", create_quest_response.content)
 assert create_quest_response.status_code == 200
 
@@ -99,7 +95,7 @@ assert finish_quest_response.status_code == 201
 # Test leaving a review
 leave_review_response = session.post(
     f"{BASE_URL}/leave_review",
-    json={"quest_id": "1", "rating": 5, "comment": "Great quest!"}
+    json={"quest_id": "1", "rating": 5, "comment": "Great quest!"},
 )
 print("Leave Review:", leave_review_response.json())
 assert leave_review_response.status_code == 200
@@ -115,6 +111,8 @@ assert profile_response.status_code == 401
 print("Profile Response:", profile_response.content)
 
 # Test Accessing User Profile
-profile_response = requests.post(f"{BASE_URL}/users/user", json={"id": "4ad5e546-8bd0-46d5-82d8-88925ddf9331"})
+profile_response = requests.post(
+    f"{BASE_URL}/users/user", json={"id": "4ad5e546-8bd0-46d5-82d8-88925ddf9331"}
+)
 assert logout_response.status_code == 200
 print("Profile Response:", profile_response.json())
