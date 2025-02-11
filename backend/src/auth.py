@@ -66,6 +66,7 @@ def register():
             "id": new_user.id,
             "email": new_user.email,
             "username": new_user.username,
+            "pass"
             "user_image": new_user.user_image,
         }
     }), 201
