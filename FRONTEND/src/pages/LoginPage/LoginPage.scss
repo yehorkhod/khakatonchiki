@@ -1,0 +1,10 @@
+@use '../../utils/mixins.scss' as *;
+
+.login-page {
+  @include page-min-height;
+  margin-top: 40px;
+}
+
+.login-form {
+  min-height: 200px;
+}

@@ -1,0 +1,119 @@
+[
+  {
+    "id": "quest1",
+    "title": "Логічні загадки",
+    "description": "Розв'яжіть три логічні завдання за обмежений час.",
+    "timeLimit": 15,
+    "feedback": [
+      { "user": "user123", "rating": 5, "comment": "Чудові завдання!" },
+      { "user": "user456", "rating": 4, "comment": "Цікаві задачі." }
+    ],
+    "questions": [
+      {
+        "text": "Яке число зайве: 2, 4, 8, 16, 31, 64?",
+        "type": "test",
+        "options": ["4", "8", "31"],
+        "rightAnswer": "31",
+        "media": {
+          "video": "https://example.com/logic-video.mp4"
+        }
+      },
+      {
+        "text": "Що спільного між квадратом і прямокутником?",
+        "type": "test",
+        "options": ["Кількість сторін", "Діагоналі рівні", "Сума кутів"],
+        "rightAnswer": "Сума кутів",
+        "media": {
+          "video": "https://example.com/geometry.mp4"
+        }
+      },
+      {
+        "text": "Що таке число Фібоначчі?",
+        "type": "test",
+        "options": ["Послідовність чисел", "Просте число", "Функція"],
+        "rightAnswer": "Послідовність чисел",
+        "media": {
+          "video": "https://example.com/fibonacci.mp4"
+        }
+      }
+    ]
+  },
+  {
+    "id": "quest2",
+    "title": "Математичні рівняння",
+    "description": "Розв’яжіть три математичні рівняння.",
+    "timeLimit": 20,
+    "feedback": [
+      { "user": "user123", "rating": 5, "comment": "Чудові завдання!" },
+      { "user": "user456", "rating": 4, "comment": "Цікаві задачі." }
+    ],
+    "questions": [
+      {
+        "text": "Розв’яжіть рівняння: x² - 4 = 0",
+        "type": "test",
+        "options": ["x = ±2", "x = 4", "x = 0"],
+        "rightAnswer": "x = ±2",
+        "media": {
+          "video": "https://example.com/equation.mp4"
+        }
+      },
+      {
+        "text": "Чому дорівнює 2^5?",
+        "type": "test",
+        "options": ["10", "25", "32"],
+        "rightAnswer": "32",
+        "media": {
+          "video": "https://example.com/power.mp4"
+        }
+      },
+      {
+        "text": "Яке число є найбільшим простим до 10?",
+        "type": "test",
+        "options": ["7", "9", "5"],
+        "rightAnswer": "7",
+        "media": {
+          "video": "https://example.com/prime.mp4"
+        }
+      }
+    ]
+  },
+  {
+    "id": "quest3",
+    "title": "Фізичні явища",
+    "description": "Відповідайте на запитання про основні фізичні явища.",
+    "timeLimit": 25,
+    "feedback": [
+      { "user": "user123", "rating": 5, "comment": "Чудові завдання!" },
+      { "user": "user456", "rating": 4, "comment": "Цікаві задачі." }
+    ],
+    "questions": [
+      {
+        "text": "Яка швидкість світла у вакуумі?",
+        "type": "test",
+        "options": ["300 000 км/с", "150 000 км/с", "1 000 000 км/с"],
+        "rightAnswer": "300 000 км/с",
+        "media": {
+          "video": "https://example.com/light-speed.mp4"
+        }
+      },
+      {
+        "text": "Що таке другий закон Ньютона?",
+        "type": "test",
+        "options": ["F = ma", "E = mc²", "V = IR"],
+        "rightAnswer": "F = ma",
+        "media": {
+          "video": "https://example.com/newton.mp4"
+        }
+      },
+      {
+        "text": "Що таке електромагнітна хвиля?",
+        "type": "test",
+        "options": ["Поширення електричного та магнітного полів", "Звук", "Світло"],
+        "rightAnswer": "Поширення електричного та магнітного полів",
+        "media": {
+          "video": "https://example.com/em-wave.mp4"
+        }
+      }
+    ]
+  }
+]

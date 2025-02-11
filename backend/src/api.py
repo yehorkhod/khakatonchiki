@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_cors import CORS
 from .config import Config
 from .auth import auth_blueprint
 from .routes import main_blueprint
@@ -6,6 +7,7 @@ from .extensions import db, sock, login_manager
 
 # API setup
 app: Flask = Flask(__name__)
+CORS(app)
 app.config.from_object(Config)
 
 # Initialize extensions

@@ -116,3 +116,37 @@ profile_response = requests.post(
 )
 assert logout_response.status_code == 200
 print("Profile Response:", profile_response.json())
+
+# Test Create Quest
+create_quest_data = {"title": "New Quest", "tasks": [{"type": "puzzle", "content": "Solve this riddle"}]}
+create_quest_response = session.post(f"{BASE_URL}/create_quest", json=create_quest_data)
+assert create_quest_response.status_code == 200
+print("Create Quest Response:", create_quest_response.json())
+
+# Test Get Quest
+quest_id = create_quest_response.json().get("quest_id")
+quest_response = session.get(f"{BASE_URL}/quest/{quest_id}")
+assert quest_response.status_code == 200
+print("Quest Response:", quest_response.json())
+
+# Test Get Quest Tasks
+tasks_response = session.get(f"{BASE_URL}/quest/{quest_id}/tasks")
+assert tasks_response.status_code == 200
+print("Quest Tasks Response:", tasks_response.json())
+
+# Test Get Top Quests
+top_quests_response = session.get(f"{BASE_URL}/quests/top")
+assert top_quests_response.status_code == 200
+print("Top Quests Response:", top_quests_response.json())
+
+# Test Finish Quest
+finish_quest_data = {"user_id": 1, "quest_id": quest_id}
+finish_quest_response = session.post(f"{BASE_URL}/finish_quest", json=finish_quest_data)
+assert finish_quest_response.status_code == 201
+print("Finish Quest Response:", finish_quest_response.json())
+
+# Test Leave Review
+leave_review_data = {"user_id": 1, "quest_id": quest_id, "rating": 5, "comment": "Great quest!"}
+leave_review_response = session.post(f"{BASE_URL}/leave_review", json=leave_review_data)
+assert leave_review_response.status_code == 200
+print("Leave Review Response:", leave_review_response.json())
