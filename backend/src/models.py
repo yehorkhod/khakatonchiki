@@ -7,7 +7,8 @@ class User(UserMixin, db.Model):
 
     id = db.Column(db.UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     username = db.Column(db.String(50), unique=True, nullable=False)
-    password = db.Column(db.String(256), nullable=False)
+    password = db.Column(db.String(256))
+    oauth_id = db.Column(db.String(100), unique=True)
     email = db.Column(db.String(150), unique=True, nullable=False)
     rating = db.Column(db.Numeric(5, 2))
     user_image = db.Column(db.Text)
@@ -15,6 +16,14 @@ class User(UserMixin, db.Model):
     quests = db.relationship('Quest', backref='author', lazy=True, cascade="all, delete")
     comments = db.relationship('Comment', backref='user', lazy=True, cascade="all, delete")
     sessions = db.relationship('Session', backref='user', lazy=True, cascade="all, delete")
+
+    def recalculate_rating(self):
+        result = db.session.execute(
+            db.text("SELECT ROUND(COALESCE(AVG(rating), 2), 2) FROM quests WHERE author_id = :user_id"),
+            {"user_id": str(self.id)}
+        ).scalar()
+        self.rating = result if result is not None else 0
+        db.session.commit()
 
 
 class Quest(db.Model):
@@ -31,6 +40,14 @@ class Quest(db.Model):
     tasks = db.relationship('Task', backref='quest', lazy=True, cascade="all, delete")
     comments = db.relationship('Comment', backref='quest', lazy=True, cascade="all, delete")
     sessions = db.relationship('Session', backref='quest', lazy=True, cascade="all, delete")
+
+    def recalculate_rating(self):
+        result = db.session.execute(
+            db.text("SELECT ROUND(COALESCE(AVG(rating), 2), 2) FROM sessions WHERE quest_id = :quest_id"),
+            {"quest_id": self.id}
+        ).scalar()
+        self.rating = result if result is not None else 0
+        db.session.commit()
 
 
 class Comment(db.Model):
@@ -49,9 +66,6 @@ class Task(db.Model):
     id = db.Column(db.BigInteger, primary_key=True, autoincrement=True)
     quest_id = db.Column(db.BigInteger, db.ForeignKey('quests.id', ondelete='CASCADE'), nullable=False)
     task_data = db.Column(db.JSON, nullable=False)  # Renamed to `task_data` for clarity
-    position = db.Column(db.Integer, nullable=False)  # Position of the task (1st, 2nd, ...)
-
-    __table_args__ = (db.CheckConstraint('position > 0', name='check_position_positive'),)
 
 
 class Session(db.Model):
@@ -60,8 +74,4 @@ class Session(db.Model):
     id = db.Column(db.BigInteger, primary_key=True, autoincrement=True)
     user_id = db.Column(db.UUID(as_uuid=True), db.ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
     quest_id = db.Column(db.BigInteger, db.ForeignKey('quests.id', ondelete='CASCADE'), nullable=False)
-    tasks_finished = db.Column(db.Integer, default=0)
-    finished = db.Column(db.Boolean, default=False)
     rating = db.Column(db.Numeric(5, 2), db.CheckConstraint('rating >= 0 AND rating <= 5'))
-
-    __table_args__ = (db.CheckConstraint('tasks_finished >= 0', name='check_tasks_finished_positive'),)
