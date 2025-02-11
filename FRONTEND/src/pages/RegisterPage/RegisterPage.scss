@@ -1,0 +1,92 @@
+@use '../../utils/mixins.scss' as *;
+
+.register-page {
+  @include page-min-height;
+  margin-top: 40px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  justify-content: center;
+  align-items: center;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  // height: 600px;
+  width: 400px;
+  min-height: 600px;
+  max-height: 800px;
+  overflow-y: auto;
+  padding: 30px;
+  margin-top: 30px;
+
+  &__title {
+    text-align: left;
+    // padding-top: 10px;
+    font-size: 27px;
+  }
+
+  &__label {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  &__input {
+    height: 35px;
+    width: 250px;
+    border-radius: 5px;
+    border: 1px solid black;
+    padding: 10px;
+
+    &--message {
+      color: red;
+      font-size: 13px;
+      position: relative;
+      padding-left: 23px; 
+
+      &::before {
+        content: '⚠️';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+    }
+  }
+
+  &__button {
+    background-color: #4f84e7;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition:
+      background-color 0.3s ease,
+      transform 0.2s ease;
+
+    /* Button hover effect */
+    &:hover {
+      background-color: #3367d6;
+      transform: translateY(-2px);
+    }
+
+    /* Focus effect */
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(56, 139, 255, 0.5);
+    }
+  }
+}
+
+.login__wrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+  justify-content: center;
+  align-items: center;
+}

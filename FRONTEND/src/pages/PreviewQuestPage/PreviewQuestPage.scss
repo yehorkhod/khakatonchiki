@@ -1,0 +1,89 @@
+.padding {
+  padding-left: 50px;
+}
+
+.quest-title {
+  text-align: left;
+  font-size: 45px;
+  margin-bottom: 20px;
+}
+
+.quest-author {
+  font-size: 14px;
+  color: #777;
+}
+
+.quest-rating {
+  font-size: 14px;
+  color: #777;
+  margin-bottom: 20px;
+}
+
+.quest-subtitle {
+  font-size: 20px;
+  margin-bottom: 30px;
+}
+
+.quest-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 160px;
+}
+
+.quest-info {
+  background-color: tomato;  // Основной цвет фона для информации
+  width: 140px;
+
+  &.count, &.time {
+    padding: 8px;
+    border-radius: 50px;  // Округлые углы
+    // background-color: orange;  // Оранжевый цвет фона
+    color: white;  // Белый цвет текста
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;  // Курсор на кнопке
+
+    // Ховер эффект для кнопки
+    &:hover {
+      background-color: darkorange;  // Более темный оттенок оранжевого при наведении
+    }
+  }
+}
+
+.wraper {
+  display: flex;
+  justify-content: space-between;
+  // gap: 500px;
+}
+
+.time {
+  width: 170px;
+}
+
+.quest-button {
+  margin-right: 30px;
+  height: 40px;
+  background-color: orange;
+  color: white;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  text-align: center;
+
+  &:hover {
+    background-color: darkorange;
+  }
+}
+
+.comment-subtitle {
+  margin: 30px 0;
+}
+
+.comments-container {
+  display: flex;
+  flex-direction: column; /* Встановлюємо вертикальне розташування */
+  gap: 10px;
+}
