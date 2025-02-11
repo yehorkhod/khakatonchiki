@@ -4,5 +4,6 @@ Flask
 flask-sock
 Flask-SQLAlchemy
 Flask-Login
+Flask-Dance
 psycopg2-binary
 python_dotenv

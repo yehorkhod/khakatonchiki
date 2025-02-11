@@ -67,8 +67,6 @@ class Task(db.Model):
     quest_id = db.Column(db.BigInteger, db.ForeignKey('quests.id', ondelete='CASCADE'), nullable=False)
     task_data = db.Column(db.JSON, nullable=False)  # Renamed to `task_data` for clarity
 
-    __table_args__ = (db.CheckConstraint('position > 0', name='check_position_positive'),)
-
 
 class Session(db.Model):
     __tablename__ = 'sessions'
@@ -76,7 +74,4 @@ class Session(db.Model):
     id = db.Column(db.BigInteger, primary_key=True, autoincrement=True)
     user_id = db.Column(db.UUID(as_uuid=True), db.ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
     quest_id = db.Column(db.BigInteger, db.ForeignKey('quests.id', ondelete='CASCADE'), nullable=False)
-    finished = db.Column(db.Boolean, default=False)
     rating = db.Column(db.Numeric(5, 2), db.CheckConstraint('rating >= 0 AND rating <= 5'))
-
-    __table_args__ = (db.CheckConstraint('tasks_finished >= 0', name='check_tasks_finished_positive'),)
