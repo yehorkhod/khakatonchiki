@@ -1,0 +1,45 @@
+/* CommentCard.css */
+.comment-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  background: white;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  margin-left: 10px;
+  transition: transform 0.3s ease-in-out;
+
+  &:hover {
+    transform: translateY(-3px);
+  }
+
+  .comment-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #4a90e2;
+  }
+
+  .comment-content {
+    flex: 1;
+
+    .comment-username {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 5px;
+      text-decoration: none;
+    }
+
+    .comment-text {
+      font-size: 1rem;
+      color: #555;
+      background: #f7f7f7;
+      padding: 10px;
+      border-radius: 8px;
+    }
+  }
+}

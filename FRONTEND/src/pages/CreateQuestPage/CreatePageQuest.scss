@@ -1,0 +1,105 @@
+@use '../../utils/mixins.scss' as *;
+
+.create-page {
+  @include page-min-height;
+  display: flex;
+  justify-content: center;  
+  align-items: center; 
+  // height: 100vh; 
+  padding: 20px;
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+
+.quest-form {
+  display: flex;
+  flex-direction: column;
+  // width: 300px;
+  align-items: center;  
+  justify-content: center;
+}
+
+.form-wrapper {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 600px;
+  align-items: center;
+  justify-content: center;
+}
+
+.form-title {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.form-label {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+.form-input,
+.form-textarea,
+.form-select {
+  width: 500px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.form-textarea {
+  resize: none;
+  height: 100px;
+}
+
+.error {
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+.question-block {
+  background: #f9f9f9;
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.button {
+  display: block;
+  width: 200px;
+  padding: 10px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.add-btn {
+  background: #28a745;
+  color: white;
+}
+
+.submit-btn {
+  background: #007bff;
+  color: white;
+}
+
+.clear-btn {
+  background-color: tomato;
+  //#ff4d4d
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+.clear-btn:hover {
+  background-color: #e63946;
+}
