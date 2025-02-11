@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { getQuests } from '../../fetch/getQuests';
+import { getQuests, getQuestsWithIds } from '../../fetch/getQuests';
 import { Quest } from '../../types/quest';
 import { QuestCard } from '../QuestCard/QuestCard';
 import './QuestList.scss';
+import { Loader } from '../Loader/Loader';
 
 export const QuestList = () => {
   //fetch quests:
@@ -13,9 +14,8 @@ export const QuestList = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    getQuests() // ---> fetching data from server on a separate function
+    getQuestsWithIds() // ---> fetching data from server on a separate function
       .then((data) => {
-        console.log(data);
         setQuests(data);
       })
       .catch((err) => {
@@ -40,7 +40,7 @@ export const QuestList = () => {
       )
       } */}
       {isLoading ?
-        <p>Loading...</p>
+        <Loader />
         : <div className="list">
           {quests.map((quest) => (
             <div key={quest.title} className="list__card">

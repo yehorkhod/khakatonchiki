@@ -1,4 +1,5 @@
 export type Quest = {
+  id?: string;
   title: string;
   description: string;
   taskCount: number;
@@ -21,7 +22,10 @@ type Feedback = {
 };
 
 type Question = {
-  type: "open" | "multipleChoice";
+  type: "open" | "test";
   question: string;
-  options?: string[]; // Опціонально, для множинного вибору
+  options: string[]; 
+  text: string;
+  rightAnswer: string;
+  media: MediaItem;
 };

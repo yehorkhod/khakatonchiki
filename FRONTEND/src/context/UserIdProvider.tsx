@@ -7,7 +7,7 @@ type Props = {
 
 export const UserIdProvider: React.FC<Props> = (props) => {
   const { children } = props;
-  const [userId, setUserId] = useState<string | null>(null);
+  const [userId, setUserId] = useState<string | null>(localStorage.getItem("userId") || null);
 
   useEffect(() => {
     const storedUserId = localStorage.getItem("userId");

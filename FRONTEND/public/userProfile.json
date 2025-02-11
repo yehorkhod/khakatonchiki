@@ -1,0 +1,12 @@
+{
+  "profilePicture": "/img/avatar3.png",
+  "name": "Тетяна Дмитренко",
+  "email": "andriy.shevchenko@example.com",
+  "createdQuests": [
+    { "questId": "quest4", "title": "Загадка пірамід" },
+    { "questId": "quest5", "title": "Мандрівка в часі" }
+  ],
+  "completedQuests": [
+    { "questId": "quest6", "title": "Тайна загибелі цивілізацій" }
+  ]
+}

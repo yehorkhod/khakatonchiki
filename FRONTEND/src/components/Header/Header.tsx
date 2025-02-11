@@ -1,12 +1,7 @@
 import { NavLink } from 'react-router-dom';
 import './Header.scss';
-// import Logo from '../../../public/img/header_components/Logo.svg?react';
-// import Favourites from '../../../public/img/header_components/Favourites.svg?react';
-// import ShoppingBag from '../../../public/img/header_components/Shopping bag.svg?react';
-// import Menu from '../../../public/img/header_components/Menu.svg?react';
-// import CloseIcon from '../../../public/img/header_components/Close.svg?react';
-// import { useTheme } from '../../hooks/useTheme';
-// import classnames from 'classnames';
+import { useContext } from 'react';
+import { UserIdContext } from '../../context/UserIdContext';
 
 export const Header = () => {
   const chooseActivePage = ({ isActive }: { isActive: boolean }) =>
@@ -15,7 +10,9 @@ export const Header = () => {
   const chooseActivePageButton = ({ isActive }: { isActive: boolean }) =>
     isActive ?
       'header__buttons_element header__is-active'
-    : 'header__buttons_element';
+      : 'header__buttons_element';
+  
+  const { userId } = useContext(UserIdContext);
 
   return (
     <>
@@ -49,7 +46,7 @@ export const Header = () => {
             <div>СТВОРИТИ КВЕСТ</div>
           </NavLink>
           <NavLink
-            to="/about us"
+            to="/about-us"
             className={chooseActivePage}
           >
             <div>ПРО НАС</div>
@@ -58,7 +55,7 @@ export const Header = () => {
         <div className="header__buttons">
           <div className="profile-icon">
             <NavLink
-              to="/profile"
+              to={userId ? `/profile/${userId}` : '/register'}
               className={chooseActivePageButton}
             >
               <img

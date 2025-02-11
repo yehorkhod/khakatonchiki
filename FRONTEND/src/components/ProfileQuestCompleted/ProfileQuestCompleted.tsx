@@ -1,27 +1,25 @@
 import React from 'react';
+import './ProfileQuestCompleted.scss';
 import { Quest } from '../../types/quest';
 import { Link } from 'react-router-dom';
-import './QuestCard.scss';
 
 type Props = {
   quest: Quest;
 };
 
-export const QuestCard: React.FC<Props> = ({ quest }) => {
+export const ProfileQuestCompleted: React.FC<Props> = ({ quest }) => {
   return (
-    <div className="card">
-      <div className="card__header">
-        <Link
-          to="/"
-          // to={`/${product.category}/${product.itemId}`}
-          className="card__header--title"
-        >
-          {quest.title}
-        </Link>
-        <p className="card__header--author">Author: Peter Kavinsky</p>
-        {/* <button>Спробувати</button> */}
-        {/* <div className="card__header--rating">Rating: {quest.rating}</div> */}
-      </div>
+    <div
+      key={quest.id}
+      className="quest-card"
+    >
+      <Link
+        to="/"
+        // to={`/${product.category}/${product.itemId}`}
+        className="card__header--title"
+      >
+        {quest.title}
+      </Link>
       <div className="card__description">{quest.description}</div>
       <div className="card__char">
         <div className="card__char--row">
@@ -38,7 +36,7 @@ export const QuestCard: React.FC<Props> = ({ quest }) => {
         </div>
       </div>
       <Link to={`/quest/${quest.id}`}>
-        <button className="card__button">Спробувати</button>
+        <button className="card__button">Спробувати ще раз</button>
       </Link>
     </div>
   );

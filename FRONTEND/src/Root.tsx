@@ -14,10 +14,23 @@ import { RegisterPage } from './pages/RegisterPage/RegisterPaage';
 import { LoginPage } from './pages/LoginPage/LoginPage';
 import { ProfilePage } from './pages/ProfilePage/ProfilePage';
 import { UserIdProvider } from './context/UserIdProvider';
+import { CreateQuestPage } from './pages/CreateQuestPage/CreateQuestPage';
+import { NeedToRegister } from './pages/NeedToRegister/NeedToRegister';
+import { PreviewQuestPage } from './pages/PreviewQuestPage/PreviewQuestPage';
+import { DoQuestPage } from './pages/DoQuestPage/DoQuestPage';
+import { AboutUsPage } from './pages/AboutUsPage/AboutUsPage';
+// import { PersistGate } from 'redux-persist/integration/react';
+// import { persistor, store } from './app/store';
+// import { Provider } from 'react-redux';
 
 export const Root = () => (
   <StrictMode>
     <UserIdProvider>
+      {/* <Provider store={store}> */}
+      {/* <PersistGate
+          loading={null}
+          persistor={persistor}
+        > */}
       <Router>
         <Routes>
           <Route
@@ -49,6 +62,7 @@ export const Root = () => (
               path="/contacts"
               element={<ContactsPage />}
             />
+            <Route path='/about-us' element={<AboutUsPage />} />
             <Route
               path="/register"
               element={<RegisterPage />}
@@ -61,9 +75,25 @@ export const Root = () => (
               path="/profile/:id"
               element={<ProfilePage />}
             />
+            <Route element={<NeedToRegister />}>
+              <Route
+                path="/create-quest"
+                element={<CreateQuestPage />}
+              />
+              <Route
+                path="/quest/:id"
+                element={<PreviewQuestPage />}
+              />
+              <Route
+                path="/quest/:id/task"
+                element={<DoQuestPage />}
+              />
+            </Route>
           </Route>
         </Routes>
       </Router>
+      {/* </PersistGate>
+      </Provider> */}
     </UserIdProvider>
   </StrictMode>
 );
