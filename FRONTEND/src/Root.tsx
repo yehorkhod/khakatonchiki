@@ -19,6 +19,8 @@ import { NeedToRegister } from './pages/NeedToRegister/NeedToRegister';
 import { PreviewQuestPage } from './pages/PreviewQuestPage/PreviewQuestPage';
 import { DoQuestPage } from './pages/DoQuestPage/DoQuestPage';
 import { AboutUsPage } from './pages/AboutUsPage/AboutUsPage';
+import { QuestResultPage } from './pages/QuestResultPage/QuestResultPage';
+import { NotFoundPage } from './pages/NotFoundPage/NotFoundPage';
 // import { PersistGate } from 'redux-persist/integration/react';
 // import { persistor, store } from './app/store';
 // import { Provider } from 'react-redux';
@@ -88,7 +90,12 @@ export const Root = () => (
                 path="/quest/:id/task"
                 element={<DoQuestPage />}
               />
+              <Route
+                path="/quest/:id/result"
+                element={<QuestResultPage />}
+              />
             </Route>
+            <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Routes>
       </Router>

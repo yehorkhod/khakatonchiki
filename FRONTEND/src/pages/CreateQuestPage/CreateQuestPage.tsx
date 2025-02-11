@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { useEffect, useState } from 'react';
 import './CreatePageQuest.scss';
+import { useNavigate } from 'react-router-dom';
 
 const question = [
   {
@@ -86,6 +87,8 @@ export const CreateQuestPage = () => {
     defaultValues: parsedData,
   });
 
+  const navigate = useNavigate();
+
   const formData = watch();
   useEffect(() => {
     localStorage.setItem(
@@ -110,6 +113,44 @@ export const CreateQuestPage = () => {
   const onSubmit = (data: FormData) => {
     localStorage.setItem('formData', JSON.stringify({ ...data, questions }));
     console.log('Form data before submission:', { ...data, questions });
+
+    // const questData = {
+    //   title: data.title,
+    //   description: data.description,
+    //   time: data.time,
+    //   questions,
+    // };
+  
+    // localStorage.setItem('formData', JSON.stringify(questData));
+    // console.log('Form data before submission:', questData);
+  
+    // try {
+    //   const response = await fetch('/api/quests', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify(questData),
+    //   });
+  
+    //   if (!response.ok) {
+    //     throw new Error(`Error: ${response.status}`);
+    //   }
+  
+    //   const responseData = await response.json();
+    //   console.log('Quest submitted successfully:', responseData);
+    //   const questId = responseData.questId;
+    // if (!questId) {
+    //   throw new Error('Quest ID is missing in the response');
+    // }
+  
+    //   reset(); // Очищення форми
+    //   setQuestions([]); // Очищення питань
+    //   localStorage.removeItem('formData'); // Видалення даних з локального сховища
+    //   navigate(`/quests/&{questId}`); // Перехід на сторінку зі списком квестів (або будь-яку іншу)
+    // } catch (error) {
+    //   console.error('Error submitting quest:', error);
+    // }
   };
 
   const addQuestion = () => {

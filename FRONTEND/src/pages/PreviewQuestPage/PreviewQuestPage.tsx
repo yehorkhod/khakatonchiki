@@ -53,6 +53,7 @@ export const PreviewQuestPage = () => {
           <div className="comments-container">
             {quest?.feedback.map((comment) => (
               <CommentCard
+                id={comment.user}
                 author={comment.user}
                 text={comment.comment}
                 avatar={'/img/avatar.jpeg'}

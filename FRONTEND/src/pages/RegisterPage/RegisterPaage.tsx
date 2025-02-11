@@ -27,11 +27,13 @@ export const RegisterPage = () => {
 
   const { login, userId } = useContext(UserIdContext);
 
-  console.log(userId);
+  // console.log(userId);
 
   const onSubmit = async (data: RegisterFormData) => {
-    console.log(data);
-    login('123');
+    // console.log(data);
+    // login('123');
+    // reset();
+    // navigate(-1);
 
     // try {
     //   const response = await axios.post('url', {
@@ -48,8 +50,35 @@ export const RegisterPage = () => {
     //   console.error(err)
     // }
 
-    reset();
-    navigate(-1);
+    try {
+      const response = await fetch('http://localhost:8000/api/auth/register', {
+        mode: 'no-cors',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: data.name,
+          email: data.email,
+          password: data.password,
+        }),
+      });
+    
+      const responseData = await response.json();
+      console.log(responseData);
+    
+      if (response.ok && responseData.userId) {
+        login(responseData.userId); // Зберігаємо userId у контексті
+      } else {
+        console.error('Error:', responseData);
+      }
+    
+      reset();
+      navigate(-1);
+    } catch (err) {
+      console.error('Fetch error:', err);
+    }
+    
   };
   return (
     <div className="register-page container">

@@ -141,11 +141,17 @@ export const HomePage = () => {
         <section className="section-nav">
           <div className="section-nav__wrapper">
             <Link
+              to="/about-us"
+              className="section-nav__wrapper--button"
+            >
+              Про нас 
+            </Link>
+            {/* <Link
               to="/instruction"
               className="section-nav__wrapper--button"
             >
               Інструкція
-            </Link>
+            </Link> */}
             <Link
               to="/create-quest"
               className="section-nav__wrapper--button"

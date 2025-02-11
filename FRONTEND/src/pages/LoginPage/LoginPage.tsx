@@ -3,9 +3,12 @@ import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
+import { UserIdContext } from '../../context/UserIdContext';
 
 export const LoginPage = () => {
   const regExpEmail = new RegExp(/^\S+@\S+\.\S+$/);
+  const { login } = useContext(UserIdContext);
 
   const shema = yup.object().shape({
     email: yup
@@ -39,9 +42,9 @@ export const LoginPage = () => {
   };
 
   const onSubmit = async (data: LoginFormData) => {
-    console.log(data);
-    reset();
-    navigate(-2);
+    // console.log(data);
+    // reset();
+    // navigate(-2);
     // try {
     //   const response = await axios.post('/api/login', {
     //     email: data.email,
@@ -57,6 +60,44 @@ export const LoginPage = () => {
     //     });
     //   }
     // }
+
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: data.email,
+          password: data.password,
+          remember: true,
+        }),
+      });
+    
+      const responseData = await response.json();
+    
+      if (!response.ok) {
+        // if (response.status === 401) {
+        //   setError('password', {
+        //     type: 'manual',
+        //     message: responseData.message,
+        //   });
+        // }
+        throw new Error(responseData.message || 'Login failed');
+      }
+
+    if (response.ok && responseData.user.id) {
+      login(responseData.user.id); // Зберігаємо userId у контексті
+    } else {
+      console.error('Error:', responseData);
+    }
+    
+      reset();
+      navigate(-2);
+    } catch (error) {
+      console.error('Fetch error:', error);
+    }
+    
   };
   return (
     <div className="login-page container">

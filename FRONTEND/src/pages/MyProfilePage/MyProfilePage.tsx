@@ -3,13 +3,14 @@ import { UserIdContext } from '../../context/UserIdContext';
 import { useNavigate } from 'react-router-dom';
 
 import './MyProfilePage.scss';
-import { getUser } from '../../fetch/getUser';
+// import { getUser } from '../../fetch/getUser';
 import { User } from '../../types/User';
 import { Quest } from '../../types/quest';
 import { getQuestsWithIds } from '../../fetch/getQuests';
 import { ProfileQuestCreated } from '../../components/ProfileQuestCreated/ProfileQuestCreated';
 import { ProfileQuestCompleted } from '../../components/ProfileQuestCompleted/ProfileQuestCompleted';
 import { Loader } from '../../components/Loader/Loader';
+import { getMyData } from '../../fetch/getUserData';
 
 export const MyProfilePage = () => {
   const { logout, userId } = useContext(UserIdContext);
@@ -34,7 +35,7 @@ export const MyProfilePage = () => {
 
     setIsLoading(true);
 
-    getUser(userId)
+    getMyData()
       .then((data) => {
         console.log(data);
         setUser(data);
@@ -61,15 +62,41 @@ export const MyProfilePage = () => {
     }
   };
 
-  const createdQuests = user?.createdQuests
-    .map((q) => quests.find((quest) => quest.id === q.questId))
-    .filter(Boolean) as Quest[];
+  const onLogout = async () => {
+    try {
+      const response = await fetch('/api/auth/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          // Якщо потрібен токен авторизації:
+          // 'Authorization': `Bearer ${token}`,
+        },
+        credentials: 'include', // Якщо бекенд використовує cookies для сесії
+      });
 
-  console.log(createdQuests, 'created');
+      const responseData = await response.json();
 
-  const completedQuests = user?.completedQuests
-    .map((q) => quests.find((quest) => quest.id === q.questId))
-    .filter(Boolean) as Quest[];
+      if (response.ok) {
+        console.log(responseData.message); // "Logout successful"
+        logout();
+        navigate('/');
+      } else {
+        console.error('Logout error:', responseData.message);
+      }
+    } catch (err) {
+      console.error('Fetch error:', err);
+    }
+  }
+
+  // const createdQuests = user?.createdQuests
+  //   .map((q) => quests.find((quest) => quest.id === q.questId))
+  //   .filter(Boolean) as Quest[];
+
+  // console.log(createdQuests, 'created');
+
+  // const completedQuests = user?.completedQuests
+  //   .map((q) => quests.find((quest) => quest.id === q.questId))
+  //   .filter(Boolean) as Quest[];
 
   if (error) {
     return <p>{error}</p>;
@@ -89,12 +116,13 @@ export const MyProfilePage = () => {
             />
             <h1 className="profile__info--name">{user?.name}</h1>
             <p className="profile__info--email">{user?.email}</p>
-            <button
+            {/* <p className="profile__info--email">{user?.rating || 'rating'}</p> */}
+            {/* <button
               className="profile__info--button"
               onClick={() => setIsModalOpen(true)}
             >
               Змінити фото профілю
-            </button>
+            </button> */}
           </div>
           <section className="created-quests">
             <h2 className="quests-list__title">Created Quests</h2>
@@ -102,7 +130,7 @@ export const MyProfilePage = () => {
               {
                 !user?.createdQuests || user.createdQuests.length === 0 ?
                   <p>Ви ще не створили жодного квесту.</p>
-                : createdQuests?.map((quest) => (
+                : user.createdQuests?.map((quest) => (
                     <ProfileQuestCreated
                       key={quest.id}
                       quest={quest}
@@ -121,7 +149,7 @@ export const MyProfilePage = () => {
               {!user?.completedQuests || user?.completedQuests.length === 0 ?
                 <p>Ви ще не створили жодного квесту.</p>
               : // <p>{user?.completedQuests[0].title}</p>
-                completedQuests?.map((quest) => (
+                user.completedQuests?.map((quest) => (
                   <ProfileQuestCompleted
                     key={quest.id}
                     quest={quest}
@@ -133,10 +161,11 @@ export const MyProfilePage = () => {
 
           <button
             className="exit"
-            onClick={() => {
-              logout();
-              navigate('/');
-            }}
+            // onClick={() => {
+            //   logout();
+            //   navigate('/');
+            // }}
+            onClick={onLogout}
           >
             Вийти
           </button>
