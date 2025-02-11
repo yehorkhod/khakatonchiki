@@ -2,6 +2,7 @@ import os
 import dotenv
 import requests
 import psycopg2
+
 dotenv.load_dotenv()
 BASE_URL = "http://localhost:8000/api"  # Adjust if needed
 SQLALCHEMY_DATABASE_URI = (
