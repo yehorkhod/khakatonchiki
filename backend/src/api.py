@@ -7,7 +7,7 @@ from .extensions import db, sock, login_manager
 
 # API setup
 app: Flask = Flask(__name__)
-CORS(app)
+CORS(app, supports_credentials=True, resources={r"/api/*": {"origins": "*"}})
 app.config.from_object(Config)
 
 # Initialize extensions
