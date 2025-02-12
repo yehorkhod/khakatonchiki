@@ -252,6 +252,7 @@ Response:
 ~~~json
 {
   "quest_id": "1",
+  "title": "title",
   "tasks": [
     { "id": "32", "content": {...} },
     ...,
