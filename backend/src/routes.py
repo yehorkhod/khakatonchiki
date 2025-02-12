@@ -162,8 +162,16 @@ def get_quest():
             # todo: add more fields
             "id": quest.id,
             "title": quest.title,
+            "description": quest.description,
             "author_id": quest.author_id,
+            "author": User.query.get(quest.author_id).username,
+            "rating": quest.rating,
+            "duration": quest.duration,
             "number_of_tasks": quest.number_of_tasks,
+            "comments": [
+                {"id": comment.id, "text": comment.text, "user_id": comment.user_id, "username": User.query.get(comment.user_id).username}
+                for comment in Comment.query.filter_by(quest_id=quest_id).all()
+            ],
         }
     )
 
@@ -186,7 +194,16 @@ def get_tasks():
 def get_quests():
     top_quests = Quest.query.order_by(Quest.rating.desc()).limit(10).all()
     quests_data = [
-        {"id": q.id, "title": q.title, "rating": q.rating} for q in top_quests
+        {
+            "id": q.id,
+            "author_id": q.author_id,
+            "author": User.query.get(q.author_id).username,
+            "title": q.title,
+            "description": q.description,
+            "number_of_tasks": q.number_of_tasks,
+            "duration": q.duration,
+            "rating": q.rating
+        } for q in top_quests
     ]
 
     return jsonify({"top_quests": quests_data})

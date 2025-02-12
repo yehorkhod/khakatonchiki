@@ -114,7 +114,7 @@ Response:
       "title": "lksdj",
       "description": "slkdj",
       "number_of_tasks": "3",
-      "duration": str(quest.duration) if quest.duration else None,
+      "duration": "45",
       "rating": "4.5",
     }
   ],
@@ -124,7 +124,7 @@ Response:
       "title": "lksdj",
       "description": "slkdj",
       "number_of_tasks": "3",
-      "duration": "30-45",
+      "duration": "45",
       "rating": "4.5",
     }
   ]
@@ -157,7 +157,7 @@ Response:
       "title": "lksdj",
       "description": "slkdj",
       "number_of_tasks": "3",
-      "duration": str(quest.duration) if quest.duration else None,
+      "duration": "45",
       "rating": "4.5",
     }
   ],
@@ -167,7 +167,7 @@ Response:
       "title": "lksdj",
       "description": "slkdj",
       "number_of_tasks": "3",
-      "duration": "30-45",
+      "duration": "30",
       "rating": "4.5",
     }
   ]
@@ -222,8 +222,16 @@ Response:
 {
   "id": "1",
   "title": "title",
-  "author_id": "author",
+  "description": "slkdjf",
+  "author_id": "432-",
+  "author": "sldkf",
+  "rating": "3",
+  "duration": "32",
   "number_of_tasks": "4",
+  "comments": [
+    {"id": "3", "text": "lskdfj", "user_id": "324", "username": "milkymommy"},
+    ...
+  ]
 }
 ~~~
 
@@ -259,14 +267,19 @@ Endpoint: GET /api/quests/top
 Response:
 
 ~~~json
-{
-  "quest_id": "1",
-  "tasks": [
-    { "stuff_1": "stuff_1", ... },
-    ...,
-    { "stuff_n": "stuff_n", ... },
-  ],
-}
+[
+  {
+    "id": "32",
+    "author_id": "432-4",
+    "author": "michaeljordan",
+    "title": "joslkdf",
+    "description": "slkdjf",
+    "number_of_tasks": "3",
+    "duration": "30",
+    "rating": "3"
+  },
+  ...
+]
 ~~~
 
 ### 11. Get Tasks
