@@ -147,7 +147,7 @@ def create_quest():
     )
 
 
-@main_blueprint.route("/get_quest_info", methods=["POST"])
+@main_blueprint.route("/get_quest_info", methods=["GET"])
 def get_quest():
     data = request.json
     quest_id = data.get("quest_id")
@@ -157,18 +157,28 @@ def get_quest():
 
     quest = Quest.query.get(quest_id)
 
+    comments = Comment.query.filter_by(quest_id=quest_id).all()
+    comments_data = [
+        {"id": comment.id, "user_id": comment.user_id, "text": comment.text,
+         "created_at": comment.created_at.isoformat()}
+        for comment in comments
+    ]
+
     return jsonify(
         {
             # todo: add more fields
             "id": quest.id,
             "title": quest.title,
+            "description": quest.description,
+            "duration": str(quest.duration) if quest.duration else None,
             "author_id": quest.author_id,
             "number_of_tasks": quest.number_of_tasks,
+            "comments": comments_data
         }
     )
 
 
-@main_blueprint.route("/get_tasks", methods=["POST"])
+@main_blueprint.route("/get_tasks", methods=["GET"])
 def get_tasks():
     data = request.json
     quest_id = data.get("quest_id")
@@ -186,7 +196,13 @@ def get_tasks():
 def get_quests():
     top_quests = Quest.query.order_by(Quest.rating.desc()).limit(10).all()
     quests_data = [
-        {"id": q.id, "title": q.title, "rating": q.rating} for q in top_quests
+        {"id": q.id,
+         "title": q.title,
+         "description": q.description,
+         "duration": str(q.duration) if q.duration else None,
+         "author_id": q.author_id,
+         "number_of_tasks": q.number_of_tasks,
+         "rating": q.rating} for q in top_quests
     ]
 
     return jsonify({"top_quests": quests_data})

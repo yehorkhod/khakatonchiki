@@ -222,8 +222,13 @@ Response:
 {
   "id": "1",
   "title": "title",
+  "description": "description",
+  "duration": "02:30:00",
   "author_id": "author",
   "number_of_tasks": "4",
+  "comments": [
+    {}
+  ]
 }
 ~~~
 
