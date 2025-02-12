@@ -2,10 +2,10 @@ import React from 'react';
 import { Quest } from '../../types/quest';
 import { Link } from 'react-router-dom';
 import './QuestCard.scss';
-import { TEST } from '../../fetch/getQuests';
+import { getQuestsType, TEST } from '../../fetch/getQuests';
 
 type Props = {
-  quest: TEST;
+  quest: getQuestsType;
   // quest: Quest;
 };
 
@@ -20,7 +20,7 @@ export const QuestCard: React.FC<Props> = ({ quest }) => {
         >
           {quest.title}
         </Link>
-        <p className="card__header--author">Author: Peter Kavinsky</p>
+        <p className="card__header--author">Author: {quest.author}</p>
         {/* <button>Спробувати</button> */}
         <div className="card__header--rating">Rating: {quest.rating}</div>
       </div>

@@ -19,8 +19,7 @@ const question = [
 ];
 
 type Media = {
-  image?: string;
-  video?: string;
+  media: string;
 };
 
 type Question = {
@@ -28,7 +27,7 @@ type Question = {
   type: string;
   options: string[];
   rightAnswer: string;
-  media: Media;
+  media: string;
 };
 
 type FormData = {
@@ -43,7 +42,7 @@ export const CreateQuestPage = () => {
   const [questions, setQuestions] = useState<Question[] | []>([]);
   const savedData = localStorage.getItem('formData');
   const parsedData: FormData =
-    savedData ? JSON.parse(savedData) : { name: '', email: '' };
+    savedData ? JSON.parse(savedData) : { title: '', description: '', duration: '' };
 
   // const schema = yup.object().shape({
   //   title: yup.string().required('title is required'),
@@ -55,7 +54,7 @@ export const CreateQuestPage = () => {
   const schema = yup.object().shape({
     title: yup.string().required('Назва обов’язкова'),
     description: yup.string().required('Опис обов’язковий'),
-    duration: yup.string().required(),
+    duration: yup.string().matches(/^\d+$/, 'Тривалість має бути числом').required('Час обов’язковий'),
     questions: yup.array().of(
       yup.object().shape({
         type: yup.string().oneOf(['open', 'test']).required(),
@@ -103,7 +102,7 @@ export const CreateQuestPage = () => {
     );
     // const updatedData = { ...formData, questions };
     // localStorage.setItem('formData', JSON.stringify(updatedData));
-  }, [formData, questions]);
+  }, [watch('title'), watch('description'), watch('duration'), questions]);
 
   useEffect(() => {
     Object.keys(parsedData).forEach((key) => {
@@ -129,80 +128,11 @@ export const CreateQuestPage = () => {
       console.error('Error submitting quest:', err);
     }
   };
-    // const questData = {
-    //   title: data.title,
-    //   description: data.description,
-    //   duration: data.duration,
-    //   tasks: questions,
-    // };
-
-    // console.log('Form data before submission:', questData);
-
-    // try {
-    //   const response = await fetch('http://localhost:8000/api/create_quest', {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //     credentials: 'include',
-    //     body: JSON.stringify(questData),
-    //   });
-
-    //   console.log(response, 'response');
-
-    //   if (!response.ok) {
-    //     throw new Error(`Error: ${response.status} response errroorr`);
-    //   }
-
-    //   const responseData = response.json();
-    //   console.log('Quest submitted successfully:', responseData);
-      // const questId = responseData.questId;
-
-      //   reset(); // Очищення форми
-    //   setQuestions([]); // Очищення питань
-    //   localStorage.removeItem('formData'); // Видалення даних з локального сховища
-    //   navigate(`/quests/&{questId}`); // Перехід на сторінку зі списком квестів (або будь-яку іншу)
-    // } catch(err) {
-    //   console.error('Error submitting quest:', err);
-    // }
-
-  
-    // localStorage.setItem('formData', JSON.stringify(questData));
-    // console.log('Form data before submission:', questData);
-  
-    // try {
-    //   const response = await fetch('http://localhost:8000/api/create_quest', {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify(questData),
-    //   });
-  
-    //   if (!response.ok) {
-    //     throw new Error(`Error: ${response.status}`);
-    //   }
-  
-    //   const responseData = await response.json();
-    //   console.log('Quest submitted successfully:', responseData);
-    //   const questId = responseData.questId;
-    // if (!questId) {
-    //   throw new Error('Quest ID is missing in the response');
-    // }
-  
-    //   reset(); // Очищення форми
-    //   setQuestions([]); // Очищення питань
-    //   localStorage.removeItem('formData'); // Видалення даних з локального сховища
-    //   navigate(`/quests/&{questId}`); // Перехід на сторінку зі списком квестів (або будь-яку іншу)
-    // } catch (error) {
-    //   console.error('Error submitting quest:', error);
-    // }
-  // };
 
   const addQuestion = () => {
     setQuestions([
       ...questions,
-      { type: 'open', text: '', media: {}, options: [], rightAnswer: '' },
+      { type: 'open', text: '', media: '', options: [], rightAnswer: '' },
     ]);
   };
 
@@ -220,7 +150,7 @@ export const CreateQuestPage = () => {
     reset({
       title: '',
       description: '',
-      duration: '0',
+      duration: '',
     });
     setQuestions([]);
     localStorage.removeItem('formData');
@@ -365,19 +295,7 @@ export const CreateQuestPage = () => {
                 </>
               }
 
-              <label className="form-label">Фото:</label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) =>
-                  handleQuestionChange(index, 'media', {
-                    ...question.media,
-                    image: e.target.files,
-                  })
-                }
-              />
-
-              <label className="form-label">Відео:</label>
+              <label className="form-label">Фото або Відео:</label>
               {/* <input
                 type="file"
                 accept="video/*"
@@ -394,10 +312,7 @@ export const CreateQuestPage = () => {
                 type="text"
                 placeholder='Вставте посилання на відео сюди'
                 onChange={(e) =>
-                  handleQuestionChange(index, 'media', {
-                    ...question.media,
-                    video: e.target.value,
-                  })
+                  handleQuestionChange(index, 'media', e.target.value)
                 }
               />
             </div>

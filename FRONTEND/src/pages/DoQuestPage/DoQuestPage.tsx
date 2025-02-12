@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Quest } from '../../types/quest';
-import { getQuestsWithIds } from '../../fetch/getQuests';
+import { finishQuest, getQuestsWithIds, getTasks } from '../../fetch/getQuests';
 import './DoQuestPage.scss';
 
 export const DoQuestPage = () => {
@@ -24,55 +24,69 @@ export const DoQuestPage = () => {
     const userAnswer = answers[index];
     const correctAnswer = quest?.questions[index].rightAnswer;
 
-    console.log(quest?.id, index, userAnswer); // send answer to server
+    console.log(quest?.id, index, userAnswer); 
 
     const isCorrect = userAnswer === correctAnswer;
     setProgress({ ...progress, [index]: isCorrect });
   };
 
   const handleFinish = async () => {
-    try {
-      // const response = await fetch("https://api.example.com/finish-quest", {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify({ questId: id }),
-      // });
-
-      // if (!response.ok) {
-      //   throw new Error("Помилка при завершенні квесту");
-      // }
+    if (!id) return;
+    const result = await finishQuest(id);
+    if (result) {
+      console.log(result.message); // "Session created successfully"
       console.log('questId----', id);
-
-      // Переход после успешного запроса
       navigate(`/quest/${id}/result`);
-    } catch (error) {
-      console.error('❌ Не вдалося завершити квест:', error);
+    } else {
+      alert('Сталася помилка при завершенні квесту.');
     }
+    // try {
+    //   // const response = await fetch("https://api.example.com/finish-quest", {
+    //   //   method: "POST",
+    //   //   headers: {
+    //   //     "Content-Type": "application/json",
+    //   //   },
+    //   //   body: JSON.stringify({ questId: id }),
+    //   // });
+
+    //   // if (!response.ok) {
+    //   //   throw new Error("Помилка при завершенні квесту");
+    //   // }
+    //   console.log('questId----', id);
+
+    //   // Переход после успешного запроса
+    //   navigate(`/quest/${id}/result`);
+    // } catch (error) {
+    //   console.error('❌ Не вдалося завершити квест:', error);
+    // }
   };
 
   useEffect(() => {
     setIsLoading(true);
-    getQuestsWithIds()
+    if (!id) return;
+  
+    getTasks(id)
       .then((data) => {
-        setQuest(data.find((q) => q.id === id) || null);
+        console.log('dataa', data)
+        setQuest(data);
       })
       .catch(() => setError('something went wrong'))
       .finally(() => setIsLoading(false));
   }, []);
 
-  console.log(quest);
+  // console.log(quest);
   return (
     <div className="page container">
       {/* <h1 className="title">{quest?.title}</h1> */}
       <div className="page-header">
-        <h1 className="title">{quest?.title}</h1>
+        <h1 className="title">{quest?.quest_id}</h1>
         <div className="progress-indicator">
-        {Object.values(progress).filter(p => p !== undefined).length}/{quest?.questions?.length}
+          {Object.values(progress).filter((p) => p !== undefined).length}/
+          {quest?.questions?.length}
         </div>
       </div>
       <p className="description">{quest?.description}</p>
+
       <div className="question-section">
         {quest?.questions?.map((question, index) => (
           <div
@@ -80,6 +94,9 @@ export const DoQuestPage = () => {
             className="question-block"
           >
             <p className="question">{question.text}</p>
+            {quest?.media && (
+              <p className="description">Пропрацюй цей ресурс, це тобі допоможе: {quest.media}</p>
+            )}
             <>
               {question.type === 'open' ?
                 <textarea

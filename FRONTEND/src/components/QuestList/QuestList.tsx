@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
-import { getQuests, TEST } from '../../fetch/getQuests';
+import { getQuests, getQuestsType, TEST } from '../../fetch/getQuests';
 import { Quest } from '../../types/quest';
 import { QuestCard } from '../QuestCard/QuestCard';
 import './QuestList.scss';
 import { Loader } from '../Loader/Loader';
 
 export const QuestList = () => {
-  const [quests, setQuests] = useState<TEST[]>([]);
+  const [quests, setQuests] = useState<getQuestsType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 

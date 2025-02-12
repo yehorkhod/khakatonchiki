@@ -22,8 +22,7 @@ type Feedback = {
 };
 
 type Media = {
-  image?: string;
-  video?: string;
+  media: string;
 };
 
 export type Question = {
@@ -31,7 +30,7 @@ export type Question = {
   type: string;
   options: string[];
   rightAnswer: string;
-  media: Media;
+  media: string;
 };
 
 export type QuestInfoType = {

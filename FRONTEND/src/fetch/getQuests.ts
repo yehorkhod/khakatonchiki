@@ -6,7 +6,19 @@ export type TEST = {
   title: string;
 }
 
-export async function getQuests(): Promise<TEST[]> {
+export type getQuestsType = {
+  author: string;
+  author_id: string;
+  description: string; 
+  duration: string | null;
+  id: number;
+  number_of_tasks: number;
+  rating: string;
+  title: string;
+}
+
+
+export async function getQuests(): Promise<getQuestsType[]> {
   const response = await fetch('http://localhost:8000/api/quests/top', {
     method: "GET",
     headers: {
@@ -33,9 +45,30 @@ export async function getQuestsWithIds(): Promise<Quest[]> {
   return response.json();
 }
 
+export type getQuestInfoByIdType = {
+  author: string;
+  author_id: string;
+  description: string; 
+  duration: string | null;
+  id: number;
+  number_of_tasks: number;
+  rating: string;
+  title: string;
+  comments: CommentType[] | [];
+
+}
+
+export type CommentType = {
+  id: string;
+  text: string;
+  user_id: string;
+  username: string;
+}
+
+
 export async function getQuestInfoById(
   questId: string,
-): Promise<QuestInfoType> {
+): Promise<getQuestInfoByIdType> {
   const response = await fetch('http://localhost:8000/api/get_quest_info', {
     method: 'POST',
     credentials: 'include',
@@ -53,37 +86,51 @@ export async function getQuestInfoById(
   return data;
 }
 
-// export async function Register(): Promise<any> {
-//   const response = await fetch('http://localhost:8000/api/auth/register');
-//   return response.json();
-// }
+type getTasksType = {
 
-// export async function getQuestsWithIds(questIds: string[]): Promise<Quest[]> {
-//   const response = await fetch('/questsWithId.json');
-//   const quests: Quest[] = await response.json();
+}
 
-//   // Фильтруем квесты, оставляя только те, чьи id совпадают с теми, что переданы в questIds
-//   const filteredQuests = quests.filter(quest => {
-//     if (quest.id) questIds.includes(quest.id);
-//   });
+export const getTasks = async (questId: string) => {
+  try {
+    const response = await fetch('http://localhost:8000/api/get_tasks', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ quest_id: questId }),
+    });
 
-//   return filteredQuests;
-// }
+    if (!response.ok) {
+      throw new Error(`Failed to fetch tasks: ${response.statusText}`);
+    }
 
-// const API_URL = 'https://your-api.com/quests'; // Замініть на свій API
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching tasks:', error);
+    return [];
+  }
+};
 
-// export const getQuestById = async (questId: string) => {
-//   try {
-//     const response = await fetch(`${API_URL}/${questId}`);
+export const finishQuest = async (questId: string): Promise<{ message: string } | null> => {
+  try {
+    const response = await fetch('/api/finish_quest', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`, // Додаємо токен авторизації
+      },
+      body: JSON.stringify({ quest_id: questId }),
+    });
 
-//     if (!response.ok) {
-//       throw new Error(`Помилка отримання квесту: ${response.statusText}`);
-//     }
+    if (!response.ok) {
+      throw new Error(`Помилка: ${response.status} ${response.statusText}`);
+    }
 
-//     const quest = await response.json();
-//     return quest;
-//   } catch (error) {
-//     console.error('Помилка при отриманні квесту:', error);
-//     return null;
-//   }
-// };
+    return await response.json();
+  } catch (error) {
+    console.error('Помилка завершення квесту:', error);
+    return null;
+  }
+};
+

@@ -5,14 +5,14 @@ import { Link } from "react-router-dom";
 type Props = {
   id: string;
   author: string;
-  avatar: string;
+  // avatar: string;
   text: string;
 }
 
-export const CommentCard: React.FC<Props> = ({ id, author, avatar, text}) => {
+export const CommentCard: React.FC<Props> = ({ id, author, text}) => {
   return (
     <div className="comment-card">
-      <img src={avatar} alt={author} className="comment-avatar" />
+      {/* <img src={avatar} alt={author} className="comment-avatar" /> */}
       <div className="comment-content">
         <Link to={`/profile/${id}`}>
           <h3 className="comment-username">{author}</h3>
