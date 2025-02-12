@@ -57,6 +57,7 @@ for i in range(1, 4):
         json={
             "title": "Test Quest",
             "description": "This is a test quest",
+            "duration": 60,
             "tasks": [
                 {"description": "Task 1", "answer": "Answer 1"},
                 {"description": "Task 2", "answer": "Answer 2"},
