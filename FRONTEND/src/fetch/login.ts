@@ -6,7 +6,7 @@ type LoginFormData = {
 export async function logIn(data: LoginFormData) {
   const response = await fetch('http://localhost:8000/api/auth/login', {
     method: 'POST',
-    credentials: 'include', // Important: allows session cookies
+    credentials: 'include', 
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       email: data.email,
@@ -16,7 +16,7 @@ export async function logIn(data: LoginFormData) {
   });
 
   if (!response.ok) {
-    throw new Error('something went wrong')
+    throw new Error('something went wrong');
   }
 
   console.log(response);

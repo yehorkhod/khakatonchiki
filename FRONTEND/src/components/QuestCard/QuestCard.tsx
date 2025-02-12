@@ -34,10 +34,10 @@ export const QuestCard: React.FC<Props> = ({ quest }) => {
           <span className="card__char--row--name">Rating:</span>
           <span className="card__char--row--value">{quest.rating}</span>
         </div>
-        <div className="card__char--row">
+        {/* <div className="card__char--row">
           <span className="card__char--row--name">Time to complete:</span>
           <span className="card__char--row--value">{quest.duration} min</span>
-        </div>
+        </div> */}
       </div>
       <Link to={`/quest/${quest.id}`}>
         <button className="card__button">Спробувати</button>

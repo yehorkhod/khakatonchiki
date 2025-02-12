@@ -1,4 +1,4 @@
-import { Quest, QuestInfoType } from '../types/quest';
+import { Quest, QuestInfoType, Question } from '../types/quest';
 
 export type TEST = {
   id: number;
@@ -86,11 +86,18 @@ export async function getQuestInfoById(
   return data;
 }
 
-type getTasksType = {
-
+export type getTasksType = {
+  quest_id: string;
+  title: string;
+  tasks: Task[];
 }
 
-export const getTasks = async (questId: string) => {
+type Task = {
+  content: Question;
+  id: number;
+};
+
+export const getTasks = async (questId: string): Promise<getTasksType | null> => {
   try {
     const response = await fetch('http://localhost:8000/api/get_tasks', {
       method: 'POST',
@@ -108,20 +115,22 @@ export const getTasks = async (questId: string) => {
     return data;
   } catch (error) {
     console.error('Error fetching tasks:', error);
-    return [];
+    return null;
   }
 };
 
 export const finishQuest = async (questId: string): Promise<{ message: string } | null> => {
   try {
-    const response = await fetch('/api/finish_quest', {
+    const response = await fetch('http://localhost:8000/api/finish_quest', {
       method: 'POST',
+      credentials: 'include', 
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`, // Додаємо токен авторизації
       },
       body: JSON.stringify({ quest_id: questId }),
     });
+
+    console.log(response);
 
     if (!response.ok) {
       throw new Error(`Помилка: ${response.status} ${response.statusText}`);

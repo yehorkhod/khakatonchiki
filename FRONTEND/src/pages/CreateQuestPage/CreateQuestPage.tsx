@@ -112,7 +112,7 @@ export const CreateQuestPage = () => {
 
   const onSubmit = async (data: FormData) => {
     console.log('Form data before sending:', data);
-    localStorage.setItem('formData', JSON.stringify({ ...data, questions }));
+    // localStorage.setItem('formData', JSON.stringify({ ...data, questions }));
 
     try {
       const result = await createQuest(data, questions);
@@ -122,7 +122,7 @@ export const CreateQuestPage = () => {
         reset();
         setQuestions([]);
         localStorage.removeItem('formData');
-        navigate(`/quests/${result.quest_id}`);
+        navigate(`/quests`);
       }
     } catch(err) {
       console.error('Error submitting quest:', err);
@@ -267,14 +267,6 @@ export const CreateQuestPage = () => {
                     />
                   ))}
                   <label className="form-label">Правильна відповідь:</label>
-                  {/* <input
-                    type="text"
-                    className="form-input"
-                    value={question.rightAnswer || ''}
-                    onChange={(e) =>
-                      handleQuestionChange(index, 'rightAnswer', e.target.value)
-                    }
-                  /> */}
                   <select
                     className="form-select"
                     value={question.rightAnswer || ''}
@@ -296,17 +288,6 @@ export const CreateQuestPage = () => {
               }
 
               <label className="form-label">Фото або Відео:</label>
-              {/* <input
-                type="file"
-                accept="video/*"
-                onChange={(e) =>
-                  handleQuestionChange(index, 'media', {
-                    ...question.media,
-                    video: e.target.files,
-                  })
-                }
-              />
-              <p>OR</p> */}
               <input
                 className="form-input"
                 type="text"
@@ -318,7 +299,6 @@ export const CreateQuestPage = () => {
             </div>
           ))}
 
-          {/* <button type="button">Додати питання</button> */}
           <button
             type="button"
             onClick={addQuestion}

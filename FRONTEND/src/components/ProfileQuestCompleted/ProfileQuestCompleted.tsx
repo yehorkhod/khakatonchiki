@@ -36,7 +36,7 @@ export const ProfileQuestCompleted: React.FC<Props> = ({ quest }) => {
         </div>
       </div>
       <Link to={`/quest/${quest.id}`}>
-        <button className="card__button">Спробувати ще раз</button>
+        <button className="card__button">Спробувати</button>
       </Link>
     </div>
   );

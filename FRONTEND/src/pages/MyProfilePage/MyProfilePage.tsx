@@ -6,7 +6,6 @@ import './MyProfilePage.scss';
 // import { getUser } from '../../fetch/getUser';
 import { User } from '../../types/User';
 import { Quest } from '../../types/quest';
-import { getQuestsWithIds } from '../../fetch/getQuests';
 import { ProfileQuestCreated } from '../../components/ProfileQuestCreated/ProfileQuestCreated';
 import { ProfileQuestCompleted } from '../../components/ProfileQuestCompleted/ProfileQuestCompleted';
 import { Loader } from '../../components/Loader/Loader';
@@ -18,7 +17,6 @@ export const MyProfilePage = () => {
   const [user, setUser] = useState<User | null>(null);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(true);
-  const [quests, setQuests] = useState<Quest[] | []>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const avatars = [
@@ -72,36 +70,7 @@ export const MyProfilePage = () => {
     } catch (err) {
       console.error('HAHA ERROR', err);
     }
-    //   try {
-    //     const response = await fetch('http://localhost:8000/api/auth/logout', {
-    //       mode: 'no-cors',
-    //       method: 'POST',
-    //       credentials: "include",
-    //     });
-
-    //     const responseData = await response.json();
-
-    //     if (response.ok) {
-    //       console.log(responseData.message,'message' ); // "Logout successful"
-    //       logout();
-    //       navigate('/');
-    //     } else {
-    //       console.error('Logout error:', responseData.message);
-    //     }
-    //   } catch (err) {
-    //     console.error('Fetch error:', err);
-    //   }
   };
-
-  // const createdQuests = user?.createdQuests
-  //   .map((q) => quests.find((quest) => quest.id === q.questId))
-  //   .filter(Boolean) as Quest[];
-
-  // console.log(createdQuests, 'created');
-
-  // const completedQuests = user?.completedQuests
-  //   .map((q) => quests.find((quest) => quest.id === q.questId))
-  //   .filter(Boolean) as Quest[];
 
   if (error) {
     return <p>{error}</p>;
@@ -127,7 +96,7 @@ export const MyProfilePage = () => {
             /> */}
             <h1 className="profile__info--name">{user?.username}</h1>
             <p className="profile__info--email">{user?.email}</p>
-            {/* <p className="profile__info--email">{user?.rating || 'rating'}</p> */}
+            <p className="profile__info--email">Rating: {user?.rating}</p>
             {/* <button
               className="profile__info--button"
               onClick={() => setIsModalOpen(true)}

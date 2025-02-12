@@ -38,7 +38,7 @@ export async function getMyProfile() {
   }
 }
 
-export async function getUserById(id: string): Promise<User | null> {
+export async function getUserById(id: string) {
   try {
     const response = await fetch('/api/users/user', {
       method: 'POST',
