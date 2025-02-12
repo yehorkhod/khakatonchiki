@@ -2,7 +2,7 @@ import { User } from "../types/User";
 
 export async function getMyData(): Promise<User | null> {
   try {
-    const response = await fetch('/api/users/me', {
+    const response = await fetch('http://localhost:8000/api/users/me', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -12,8 +12,10 @@ export async function getMyData(): Promise<User | null> {
     if (!response.ok) {
       throw new Error(`Error: ${response.status} ${response.statusText}`);
     }
+    console.log(response, 'blaaaa');
 
     const data = await response.json();
+
     return data;
   } catch (error) {
     console.error('Failed to fetch user data:', error);

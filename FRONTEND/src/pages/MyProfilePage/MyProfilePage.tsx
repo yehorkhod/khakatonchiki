@@ -64,14 +64,13 @@ export const MyProfilePage = () => {
 
   const onLogout = async () => {
     try {
-      const response = await fetch('/api/auth/logout', {
+      const response = await fetch('http://localhost:8000/api/auth/logout', {
+        mode: 'no-cors',
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          // Якщо потрібен токен авторизації:
-          // 'Authorization': `Bearer ${token}`,
         },
-        credentials: 'include', // Якщо бекенд використовує cookies для сесії
+        // credentials: 'include',
       });
 
       const responseData = await response.json();

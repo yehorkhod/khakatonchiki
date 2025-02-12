@@ -42,6 +42,31 @@ export const LoginPage = () => {
   };
 
   const onSubmit = async (data: LoginFormData) => {
+    console.log({
+          email: data.email,
+          password: data.password,
+        });
+
+    fetch('http://localhost:8000/api/auth/login', {
+      mode: 'no-cors',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: data.email,
+        password: data.password,
+      }),
+    })
+      .then((response) => {
+        console.log(response, 'response')
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    }).then((data) => {
+      console.log(data); // Встановлюємо відповідь сервера
+    })
     // console.log(data);
     // reset();
     // navigate(-2);
@@ -61,42 +86,42 @@ export const LoginPage = () => {
     //   }
     // }
 
-    try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: data.email,
-          password: data.password,
-          remember: true,
-        }),
-      });
+    // try {
+    //   const response = await fetch('http://localhost:8000/api/auth/login', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify({
+    //       email: data.email,
+    //       password: data.password,
+    //       remember: true,
+    //     }),
+    //   });
     
-      const responseData = await response.json();
+    //   const responseData = await response.json();
     
-      if (!response.ok) {
-        // if (response.status === 401) {
-        //   setError('password', {
-        //     type: 'manual',
-        //     message: responseData.message,
-        //   });
-        // }
-        throw new Error(responseData.message || 'Login failed');
-      }
+    //   if (!response.ok) {
+    //     // if (response.status === 401) {
+    //     //   setError('password', {
+    //     //     type: 'manual',
+    //     //     message: responseData.message,
+    //     //   });
+    //     // }
+    //     throw new Error(responseData.message || 'Login failed');
+    //   }
 
-    if (response.ok && responseData.user.id) {
-      login(responseData.user.id); // Зберігаємо userId у контексті
-    } else {
-      console.error('Error:', responseData);
-    }
+    // if (response.ok && responseData.user.id) {
+    //   login(responseData.user.id); // Зберігаємо userId у контексті
+    // } else {
+    //   console.error('Error:', responseData);
+    // }
     
-      reset();
-      navigate(-2);
-    } catch (error) {
-      console.error('Fetch error:', error);
-    }
+    //   reset();
+    //   navigate(-2);
+    // } catch (error) {
+    //   console.error('Fetch error:', error);
+    // }
     
   };
   return (

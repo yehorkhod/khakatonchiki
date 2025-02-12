@@ -5,6 +5,7 @@ import { shema } from '../../utils/functions/shema';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import { UserIdContext } from '../../context/UserIdContext';
+import { Register } from '../../fetch/getQuests';
 
 type RegisterFormData = {
   name: string;
@@ -30,54 +31,65 @@ export const RegisterPage = () => {
   // console.log(userId);
 
   const onSubmit = async (data: RegisterFormData) => {
-    // console.log(data);
-    // login('123');
-    // reset();
-    // navigate(-1);
+    console.log({
+      username: data.name,
+      email: data.email,
+      password: data.password,
+    });
+
+    fetch('http://localhost:8000/api/auth/register', {
+      // mode: 'no-cors',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        username: data.name,
+        email: data.email,
+        password: data.password,
+      }),
+    })
+      .then((response) => {
+        console.log(response, 'response')
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      }).then((data) => {
+        // console.log(data, data.user.id); 
+        login(data.user.id);
+        reset();
+        navigate(-1);
+      });
 
     // try {
-    //   const response = await axios.post('url', {
-    //     name: data.name,
-    //     email: data.email,
-    //     password: data.password,
-    //   })
-    //   if (response.data.userId) {
-    //     login(response.data.userId); // Зберігаємо userId у контексті
+    //   const response = await fetch('http://localhost:8000/api/auth/register', {
+    //     mode: 'no-cors',
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify({
+    //       username: data.name,
+    //       email: data.email,
+    //       password: data.password,
+    //     }),
+    //   });
+    
+    //   const responseData = await response.json();
+    //   console.log(responseData);
+    
+    //   if (response.ok && responseData.userId) {
+    //     login(responseData.userId); // Зберігаємо userId у контексті
+    //   } else {
+    //     console.error('Error:', responseData);
     //   }
+    
     //   reset();
     //   navigate(-1);
     // } catch (err) {
-    //   console.error(err)
+    //   console.error('Fetch error:', err);
     // }
-
-    try {
-      const response = await fetch('http://localhost:8000/api/auth/register', {
-        mode: 'no-cors',
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          username: data.name,
-          email: data.email,
-          password: data.password,
-        }),
-      });
-    
-      const responseData = await response.json();
-      console.log(responseData);
-    
-      if (response.ok && responseData.userId) {
-        login(responseData.userId); // Зберігаємо userId у контексті
-      } else {
-        console.error('Error:', responseData);
-      }
-    
-      reset();
-      navigate(-1);
-    } catch (err) {
-      console.error('Fetch error:', err);
-    }
     
   };
   return (

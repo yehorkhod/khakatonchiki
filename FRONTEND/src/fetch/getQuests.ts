@@ -12,6 +12,11 @@ export async function getQuestsWithIds(): Promise<Quest[]> {
   return response.json();
 }
 
+// export async function Register(): Promise<any> {
+//   const response = await fetch('http://localhost:8000/api/auth/register');
+//   return response.json();
+// }
+
 // export async function getQuestsWithIds(questIds: string[]): Promise<Quest[]> {
 //   const response = await fetch('/questsWithId.json');
 //   const quests: Quest[] = await response.json();
