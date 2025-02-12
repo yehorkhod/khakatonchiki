@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS quests (
     title VARCHAR(200) NOT NULL,
     description VARCHAR(500),
     number_of_tasks INTEGER NOT NULL,
-    duration INTERVAL,
+    duration INTEGER,
     rating NUMERIC(5,2) DEFAULT 0
 );
 
