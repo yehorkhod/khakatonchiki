@@ -46,7 +46,7 @@ class Quest(db.Model):
     title = db.Column(db.String(200), nullable=False)
     description = db.Column(db.String(500))
     number_of_tasks = db.Column(db.Integer, nullable=False)
-    duration = db.Column(db.Interval())
+    duration = db.Column(db.Integer)
     rating = db.Column(db.Numeric(5, 2), default=0)
 
     tasks = db.relationship("Task", backref="quest", lazy=True, cascade="all, delete")

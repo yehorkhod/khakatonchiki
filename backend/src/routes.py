@@ -120,18 +120,11 @@ def create_quest():
         title=data["title"],
         author_id=current_user.id,
         number_of_tasks=(data.get("tasks") and len(data["tasks"])) or 0,
+        duration=data.get("duration") if data.get("duration") else None,
+        description=data.get("description") if data.get("description") else None,
     )
     db.session.add(new_quest)
-
-    # duration
-    if data.get("duration"):
-        new_quest.duration = data["duration"]
-        db.session.commit()
-
-    # description
-    if data.get("description"):
-        new_quest.description = data["description"]
-        db.session.commit()
+    db.session.commit()
 
     # tasks
     if "tasks" in data:
@@ -162,8 +155,16 @@ def get_quest():
             # todo: add more fields
             "id": quest.id,
             "title": quest.title,
+            "description": quest.description,
             "author_id": quest.author_id,
+            "author": User.query.get(quest.author_id).username,
+            "rating": quest.rating,
+            "duration": quest.duration,
             "number_of_tasks": quest.number_of_tasks,
+            "comments": [
+                {"id": comment.id, "text": comment.text, "user_id": comment.user_id, "username": User.query.get(comment.user_id).username}
+                for comment in Comment.query.filter_by(quest_id=quest_id).all()
+            ],
         }
     )
 
@@ -186,7 +187,16 @@ def get_tasks():
 def get_quests():
     top_quests = Quest.query.order_by(Quest.rating.desc()).limit(10).all()
     quests_data = [
-        {"id": q.id, "title": q.title, "rating": q.rating} for q in top_quests
+        {
+            "id": q.id,
+            "author_id": q.author_id,
+            "author": User.query.get(q.author_id).username,
+            "title": q.title,
+            "description": q.description,
+            "number_of_tasks": q.number_of_tasks,
+            "duration": q.duration,
+            "rating": q.rating
+        } for q in top_quests
     ]
 
     return jsonify({"top_quests": quests_data})
@@ -235,12 +245,9 @@ def leave_review():
         return jsonify({"error": "Author not found"}), 404
 
     # TODO: Implement rating
-    # if rating:
-    #     session.rating = int(rating)
-    #     db.session.commit()
-
-    #     quest.recalculate_rating()
-    #     author.recalculate_rating()
+    if rating:
+        session.rating = int(rating)
+        db.session.commit()
 
     if comment_text:
         new_comment = Comment(
