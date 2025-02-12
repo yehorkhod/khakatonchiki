@@ -162,8 +162,15 @@ def get_quest():
             # todo: add more fields
             "id": quest.id,
             "title": quest.title,
+            "description": quest.description,
             "author_id": quest.author_id,
+            "rating": quest.rating,
+            "duration": quest.duration,
             "number_of_tasks": quest.number_of_tasks,
+            "comments": [
+                {"id": comment.id, "text": comment.text, "user_id": comment.user_id}
+                for comment in Comment.query.filter_by(quest_id=quest_id).all()
+            ],
         }
     )
 
