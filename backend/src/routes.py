@@ -245,12 +245,9 @@ def leave_review():
         return jsonify({"error": "Author not found"}), 404
 
     # TODO: Implement rating
-    # if rating:
-    #     session.rating = int(rating)
-    #     db.session.commit()
-
-    #     quest.recalculate_rating()
-    #     author.recalculate_rating()
+    if rating:
+        session.rating = int(rating)
+        db.session.commit()
 
     if comment_text:
         new_comment = Comment(
