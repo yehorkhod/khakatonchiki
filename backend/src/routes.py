@@ -120,18 +120,11 @@ def create_quest():
         title=data["title"],
         author_id=current_user.id,
         number_of_tasks=(data.get("tasks") and len(data["tasks"])) or 0,
+        duration=data.get("duration") if data.get("duration") else None,
+        description=data.get("description") if data.get("description") else None,
     )
     db.session.add(new_quest)
-
-    # duration
-    if data.get("duration"):
-        new_quest.duration = data["duration"]
-        db.session.commit()
-
-    # description
-    if data.get("description"):
-        new_quest.description = data["description"]
-        db.session.commit()
+    db.session.commit()
 
     # tasks
     if "tasks" in data:
