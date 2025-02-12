@@ -1,11 +1,12 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import './QuestResultPage.scss';
+import { leaveReview } from "../../fetch/review";
 
 export const QuestResultPage = () => {
   const { id } = useParams();
 
-  const [rating, setRating] = useState<number | null>(null);
+  const [rating, setRating] = useState<string | null>(null);
   const [comment, setComment] = useState("");
 
   const navigate = useNavigate();
@@ -17,25 +18,18 @@ export const QuestResultPage = () => {
       comment,
     };
 
-    try {
-      // const response = await fetch("https://api.example.com/quest-feedback", {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify(feedbackData),
-      // });
+    console.log(feedbackData);
 
-      // if (!response.ok) {
-      //   throw new Error("Помилка при відправці відгуку");
-      // }
-
-      console.log(feedbackData);
-      navigate('/quests')
-      // setRating(null);
-      // setComment("");
-    } catch (error) {
-      console.error("❌ Не вдалося відправити відгук:", error);
+    if (!id) return;
+    const result = await leaveReview(id, rating, comment);
+    console.log('result', result);
+    if (result) {
+      console.log(result.message); 
+      setRating(null);
+      setComment("");
+      navigate('/quests');
+    } else {
+      alert('Помилка під час залишення відгуку.');
     }
   };
 
@@ -49,8 +43,8 @@ export const QuestResultPage = () => {
           {[0, 1, 2, 3, 4, 5].map((star) => (
             <button
               key={star}
-              className={`star-btn ${rating === star ? "selected" : ""}`}
-              onClick={() => setRating(star)}
+              className={`star-btn ${rating === String(star) ? "selected" : ""}`}
+              onClick={() => setRating(String(star))}
             >
               {star} ⭐
             </button>

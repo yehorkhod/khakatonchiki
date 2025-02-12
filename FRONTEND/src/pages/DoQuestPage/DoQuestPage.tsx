@@ -1,12 +1,16 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Quest } from '../../types/quest';
-import { getQuestsWithIds } from '../../fetch/getQuests';
+import {
+  finishQuest,
+  getTasks,
+  getTasksType,
+} from '../../fetch/getQuests';
 import './DoQuestPage.scss';
+import { Loader } from '../../components/Loader/Loader';
 
 export const DoQuestPage = () => {
   const { id } = useParams();
-  const [quest, setQuest] = useState<Quest | null>(null);
+  const [quest, setQuest] = useState<getTasksType | null>(null);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [answers, setAnswers] = useState<{ [key: number]: string }>({});
@@ -22,136 +26,155 @@ export const DoQuestPage = () => {
 
   const submitAnswer = (index: number) => {
     const userAnswer = answers[index];
-    const correctAnswer = quest?.questions[index].rightAnswer;
+    const correctAnswer = quest?.tasks[index].content.rightAnswer;
 
-    console.log(quest?.id, index, userAnswer); // send answer to server
+    console.log(quest?.quest_id, index, userAnswer);
 
     const isCorrect = userAnswer === correctAnswer;
     setProgress({ ...progress, [index]: isCorrect });
   };
 
   const handleFinish = async () => {
-    try {
-      // const response = await fetch("https://api.example.com/finish-quest", {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify({ questId: id }),
-      // });
-
-      // if (!response.ok) {
-      //   throw new Error("Помилка при завершенні квесту");
-      // }
+    if (!id) return;
+    const result = await finishQuest(id);
+    console.log(result, 'resultiki');
+    if (result) {
+      console.log(result.message); // "Session created successfully"
       console.log('questId----', id);
-
-      // Переход после успешного запроса
       navigate(`/quest/${id}/result`);
-    } catch (error) {
-      console.error('❌ Не вдалося завершити квест:', error);
+    } else {
+      alert('Сталася помилка при завершенні квесту.');
     }
   };
 
   useEffect(() => {
     setIsLoading(true);
-    getQuestsWithIds()
+    if (!id) return;
+
+    getTasks(id)
       .then((data) => {
-        setQuest(data.find((q) => q.id === id) || null);
+        console.log('dataa', data);
+        setQuest(data);
       })
       .catch(() => setError('something went wrong'))
       .finally(() => setIsLoading(false));
   }, []);
 
-  console.log(quest);
-  return (
-    <div className="page container">
-      {/* <h1 className="title">{quest?.title}</h1> */}
-      <div className="page-header">
-        <h1 className="title">{quest?.title}</h1>
-        <div className="progress-indicator">
-        {Object.values(progress).filter(p => p !== undefined).length}/{quest?.questions?.length}
-        </div>
-      </div>
-      <p className="description">{quest?.description}</p>
-      <div className="question-section">
-        {quest?.questions?.map((question, index) => (
-          <div
-            key={index}
-            className="question-block"
-          >
-            <p className="question">{question.text}</p>
-            <>
-              {question.type === 'open' ?
-                <textarea
-                  value={answers[index] || ''}
-                  onChange={(e) => handleAnswerChange(index, e.target.value)}
-                  placeholder="Введіть вашу відповідь"
-                  disabled={progress[index] !== undefined}
-                ></textarea>
-              : <div className="options">
-                  {question.options?.map((option, i) => (
-                    <label
-                      key={i}
-                      className="option-label"
-                    >
-                      <input
-                        type="radio"
-                        name={`question-${index}`}
-                        value={option}
-                        checked={answers[index] === option}
-                        onChange={() => handleAnswerChange(index, option)}
-                        disabled={progress[index] !== undefined}
-                      />
-                      {option}
-                    </label>
-                  ))}
-                </div>
-              }
-              <button
-                onClick={() => submitAnswer(index)}
-                className="submit-btn"
-              >
-                Відправити відповідь
-              </button>
+  console.log(quest, 'quesseeertrttt');
 
-              {progress[index] !== undefined && (
-                <p
-                  className={`progress ${progress[index] ? 'correct' : 'incorrect'}`}
+  if (error) {
+    return <p>{error}</p>;
+  }
+  return (
+    <>
+      {isLoading ?
+        <Loader />
+      : <>
+          <div className="page container">
+            {/* <h1 className="title">{quest?.title}</h1> */}
+            <div className="page-header">
+              <h1 className="title">{quest?.title}</h1>
+              <div className="progress-indicator">
+                {Object.values(progress).filter((p) => p !== undefined).length}/
+                {quest?.tasks?.length}
+              </div>
+            </div>
+            {/* <p className="description">{quest?.description}</p> */}
+
+            <div className="question-section">
+              {quest?.tasks?.map((question, index) => (
+                <div
+                  key={index}
+                  className="question-block"
                 >
-                  {progress[index] ? '✅ Правильно' : '❌ Неправильно'}
-                </p>
-              )}
-              {progress[index] === false && (
-                <p className="correct-answer">
-                  ✅ Правильна відповідь: {quest.questions[index].rightAnswer}
-                </p>
-              )}
-            </>
+                  <p className="question">{question.content.text}</p>
+                  {question.content.media && (
+                    <p className="description">
+                      Пропрацюй цей ресурс, це тобі допоможе:{' '}
+                      {question.content.media}
+                    </p>
+                  )}
+                  <>
+                    {question.content.type === 'open' ?
+                      <textarea
+                        value={answers[index] || ''}
+                        onChange={(e) =>
+                          handleAnswerChange(index, e.target.value)
+                        }
+                        placeholder="Введіть вашу відповідь"
+                        disabled={progress[index] !== undefined}
+                      ></textarea>
+                    : <div className="options">
+                        {question.content.options?.map((option, i) => (
+                          <label
+                            key={i}
+                            className="option-label"
+                          >
+                            <input
+                              type="radio"
+                              name={`question-${index}`}
+                              value={option}
+                              checked={answers[index] === option}
+                              onChange={() => handleAnswerChange(index, option)}
+                              disabled={progress[index] !== undefined}
+                            />
+                            {option}
+                          </label>
+                        ))}
+                      </div>
+                    }
+                    <button
+                      onClick={() => submitAnswer(index)}
+                      className="submit-btn"
+                    >
+                      Відправити відповідь
+                    </button>
+
+                    {question.content.type !== 'open' && (
+                      <>
+                        {progress[index] !== undefined && (
+                          <p
+                            className={`progress ${progress[index] ? 'correct' : 'incorrect'}`}
+                          >
+                            {progress[index] ?
+                              '✅ Правильно'
+                            : '❌ Неправильно'}
+                          </p>
+                        )}
+                        {progress[index] === false && (
+                          <p className="correct-answer">
+                            ✅ Правильна відповідь:{' '}
+                            {quest.tasks[index].content.rightAnswer}
+                          </p>
+                        )}
+                      </>
+                    )}
+                  </>
+                </div>
+              ))}
+            </div>
+            {/* <Link to={`/quest/${id}/result`}> */}
+            <button
+              className="finish-btn"
+              onClick={handleFinish}
+            >
+              Завершити
+            </button>
+            {/* </Link> */}
           </div>
-        ))}
-      </div>
-      {/* <Link to={`/quest/${id}/result`}> */}
-      <button
-        className="finish-btn"
-        onClick={handleFinish}
-      >
-        Завершити
-      </button>
-      {/* </Link> */}
-    </div>
+        </>
+      }
+    </>
   );
 };
 
 {
-  /* <div className="media-item">
-                {quest.media[index].type === "image" && (
-                  <img src={quest.media[index].content} alt="Quest visual" />
-                )}
-                {quest.media[index].type === "video" && (
-                  <video controls>
-                    <source src={quest.media[index].content} type="video/mp4" />
-                    Ваш браузер не підтримує відео.
-                  </video>
-                )}
-              </div> */
+  /* <div className="page container">
+                <h1 className="title">В квесті {quest?.title} поки немає питань</h1>
+                <div className="wrapper-button">
+                <Link to={'/quests'} className="home-link center">
+                  Перейти до всіх квестів
+                </Link>
+                </div> */
 }
+// </div>

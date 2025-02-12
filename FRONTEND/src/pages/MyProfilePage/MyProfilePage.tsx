@@ -6,18 +6,17 @@ import './MyProfilePage.scss';
 // import { getUser } from '../../fetch/getUser';
 import { User } from '../../types/User';
 import { Quest } from '../../types/quest';
-import { getQuestsWithIds } from '../../fetch/getQuests';
 import { ProfileQuestCreated } from '../../components/ProfileQuestCreated/ProfileQuestCreated';
 import { ProfileQuestCompleted } from '../../components/ProfileQuestCompleted/ProfileQuestCompleted';
 import { Loader } from '../../components/Loader/Loader';
-import { getMyData } from '../../fetch/getUserData';
+import { getMyData, getMyProfile } from '../../fetch/getUserData';
+import { logOut } from '../../fetch/login';
 
 export const MyProfilePage = () => {
   const { logout, userId } = useContext(UserIdContext);
   const [user, setUser] = useState<User | null>(null);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(true);
-  const [quests, setQuests] = useState<Quest[] | []>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const avatars = [
@@ -35,7 +34,7 @@ export const MyProfilePage = () => {
 
     setIsLoading(true);
 
-    getMyData()
+    getMyProfile()
       .then((data) => {
         console.log(data);
         setUser(data);
@@ -45,11 +44,7 @@ export const MyProfilePage = () => {
         setError('Something went wrong');
       })
       .finally(() => setIsLoading(false));
-
-    getQuestsWithIds()
-      .then((data) => setQuests(data))
-      .catch(() => setError('cant fetch quests'));
-  }, [userId]);
+  }, []);
 
   const handleAvatarSelect = (avatar: string) => {
     setUser((prev) => (prev ? { ...prev, profilePicture: avatar } : null));
@@ -64,39 +59,18 @@ export const MyProfilePage = () => {
 
   const onLogout = async () => {
     try {
-      const response = await fetch('/api/auth/logout', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          // Якщо потрібен токен авторизації:
-          // 'Authorization': `Bearer ${token}`,
-        },
-        credentials: 'include', // Якщо бекенд використовує cookies для сесії
-      });
+      const result = await logOut();
 
-      const responseData = await response.json();
-
-      if (response.ok) {
-        console.log(responseData.message); // "Logout successful"
+      if (result) {
+        console.log('login successfull', result);
+        console.log(result.message);
         logout();
         navigate('/');
-      } else {
-        console.error('Logout error:', responseData.message);
       }
     } catch (err) {
-      console.error('Fetch error:', err);
+      console.error('HAHA ERROR', err);
     }
-  }
-
-  // const createdQuests = user?.createdQuests
-  //   .map((q) => quests.find((quest) => quest.id === q.questId))
-  //   .filter(Boolean) as Quest[];
-
-  // console.log(createdQuests, 'created');
-
-  // const completedQuests = user?.completedQuests
-  //   .map((q) => quests.find((quest) => quest.id === q.questId))
-  //   .filter(Boolean) as Quest[];
+  };
 
   if (error) {
     return <p>{error}</p>;
@@ -109,14 +83,20 @@ export const MyProfilePage = () => {
       : <div className="profile-page">
           <h1 className="page-title">Мій профіль</h1>
           <div className="profile__info">
-            <img
-              src={user?.profilePicture}
+            {user?.user_image && (
+              <div
+                dangerouslySetInnerHTML={{ __html: user.user_image }}
+                className="profile__info--picture"
+              ></div>
+            )}
+            {/* <img
+              src={user?.user_image}
               alt="Аватар"
               className="profile__info--picture"
-            />
-            <h1 className="profile__info--name">{user?.name}</h1>
+            /> */}
+            <h1 className="profile__info--name">{user?.username}</h1>
             <p className="profile__info--email">{user?.email}</p>
-            {/* <p className="profile__info--email">{user?.rating || 'rating'}</p> */}
+            <p className="profile__info--email">Rating: {user?.rating}</p>
             {/* <button
               className="profile__info--button"
               onClick={() => setIsModalOpen(true)}
@@ -128,14 +108,15 @@ export const MyProfilePage = () => {
             <h2 className="quests-list__title">Created Quests</h2>
             <div className="quests-list">
               {
-                !user?.createdQuests || user.createdQuests.length === 0 ?
+                !user?.created_quests || user.created_quests.length === 0 ?
                   <p>Ви ще не створили жодного квесту.</p>
-                : user.createdQuests?.map((quest) => (
+                : user.created_quests?.map((quest) => (
                     <ProfileQuestCreated
                       key={quest.id}
                       quest={quest}
                     />
                   ))
+
 
                 // <div className="quest-card">
                 // <ProfileQuestCreated quests={createdQuests} />
@@ -146,10 +127,10 @@ export const MyProfilePage = () => {
           <section className="completed-quests">
             <h2 className="quests-list__title">Completed Quests</h2>
             <div className="quests-list">
-              {!user?.completedQuests || user?.completedQuests.length === 0 ?
+              {!user?.completed_quests || user?.completed_quests.length === 0 ?
                 <p>Ви ще не створили жодного квесту.</p>
               : // <p>{user?.completedQuests[0].title}</p>
-                user.completedQuests?.map((quest) => (
+                user.completed_quests?.map((quest) => (
                   <ProfileQuestCompleted
                     key={quest.id}
                     quest={quest}

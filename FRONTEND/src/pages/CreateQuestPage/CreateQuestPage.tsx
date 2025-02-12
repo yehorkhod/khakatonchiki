@@ -4,6 +4,7 @@ import * as yup from 'yup';
 import { useEffect, useState } from 'react';
 import './CreatePageQuest.scss';
 import { useNavigate } from 'react-router-dom';
+import { createQuest } from '../../fetch/create-quest';
 
 const question = [
   {
@@ -18,8 +19,7 @@ const question = [
 ];
 
 type Media = {
-  image?: string;
-  video?: string;
+  media: string;
 };
 
 type Question = {
@@ -27,14 +27,14 @@ type Question = {
   type: string;
   options: string[];
   rightAnswer: string;
-  media: Media;
+  media: string;
 };
 
 type FormData = {
   title: string;
   description: string;
   // count: number;
-  time: number;
+  duration: string;
   // questions: Question[];
 };
 
@@ -42,7 +42,7 @@ export const CreateQuestPage = () => {
   const [questions, setQuestions] = useState<Question[] | []>([]);
   const savedData = localStorage.getItem('formData');
   const parsedData: FormData =
-    savedData ? JSON.parse(savedData) : { name: '', email: '' };
+    savedData ? JSON.parse(savedData) : { title: '', description: '', duration: '' };
 
   // const schema = yup.object().shape({
   //   title: yup.string().required('title is required'),
@@ -54,7 +54,7 @@ export const CreateQuestPage = () => {
   const schema = yup.object().shape({
     title: yup.string().required('Назва обов’язкова'),
     description: yup.string().required('Опис обов’язковий'),
-    time: yup.number().min(1, 'Мінімальний час – 1 хв').required(),
+    duration: yup.string().matches(/^\d+$/, 'Тривалість має бути числом').required('Час обов’язковий'),
     questions: yup.array().of(
       yup.object().shape({
         type: yup.string().oneOf(['open', 'test']).required(),
@@ -96,13 +96,13 @@ export const CreateQuestPage = () => {
       JSON.stringify({
         title: watch('title'),
         description: watch('description'),
-        time: watch('time'),
+        duration: watch('duration'),
         questions,
       }),
     );
     // const updatedData = { ...formData, questions };
     // localStorage.setItem('formData', JSON.stringify(updatedData));
-  }, [formData, questions]);
+  }, [watch('title'), watch('description'), watch('duration'), questions]);
 
   useEffect(() => {
     Object.keys(parsedData).forEach((key) => {
@@ -110,53 +110,29 @@ export const CreateQuestPage = () => {
     });
   }, [setValue]);
 
-  const onSubmit = (data: FormData) => {
-    localStorage.setItem('formData', JSON.stringify({ ...data, questions }));
-    console.log('Form data before submission:', { ...data, questions });
+  const onSubmit = async (data: FormData) => {
+    console.log('Form data before sending:', data);
+    // localStorage.setItem('formData', JSON.stringify({ ...data, questions }));
 
-    // const questData = {
-    //   title: data.title,
-    //   description: data.description,
-    //   time: data.time,
-    //   questions,
-    // };
-  
-    // localStorage.setItem('formData', JSON.stringify(questData));
-    // console.log('Form data before submission:', questData);
-  
-    // try {
-    //   const response = await fetch('/api/quests', {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify(questData),
-    //   });
-  
-    //   if (!response.ok) {
-    //     throw new Error(`Error: ${response.status}`);
-    //   }
-  
-    //   const responseData = await response.json();
-    //   console.log('Quest submitted successfully:', responseData);
-    //   const questId = responseData.questId;
-    // if (!questId) {
-    //   throw new Error('Quest ID is missing in the response');
-    // }
-  
-    //   reset(); // Очищення форми
-    //   setQuestions([]); // Очищення питань
-    //   localStorage.removeItem('formData'); // Видалення даних з локального сховища
-    //   navigate(`/quests/&{questId}`); // Перехід на сторінку зі списком квестів (або будь-яку іншу)
-    // } catch (error) {
-    //   console.error('Error submitting quest:', error);
-    // }
+    try {
+      const result = await createQuest(data, questions);
+      if (result) {
+        console.log(result.message, 'messsss');
+        console.log(result.quest_id);
+        reset();
+        setQuestions([]);
+        localStorage.removeItem('formData');
+        navigate(`/quests`);
+      }
+    } catch(err) {
+      console.error('Error submitting quest:', err);
+    }
   };
 
   const addQuestion = () => {
     setQuestions([
       ...questions,
-      { type: 'open', text: '', media: {}, options: [], rightAnswer: '' },
+      { type: 'open', text: '', media: '', options: [], rightAnswer: '' },
     ]);
   };
 
@@ -174,7 +150,7 @@ export const CreateQuestPage = () => {
     reset({
       title: '',
       description: '',
-      time: 0,
+      duration: '',
     });
     setQuestions([]);
     localStorage.removeItem('formData');
@@ -225,11 +201,11 @@ export const CreateQuestPage = () => {
             <input
               className="form-input"
               placeholder='Час виконання'
-              type="number"
-              {...register('time')}
+              type="string"
+              {...register('duration')}
             />
-            {errors.time && (
-              <span className="error">{errors.time.message}</span>
+            {errors.duration && (
+              <span className="error">{errors.duration.message}</span>
             )}
           </label>
           {/* <label>
@@ -291,14 +267,6 @@ export const CreateQuestPage = () => {
                     />
                   ))}
                   <label className="form-label">Правильна відповідь:</label>
-                  {/* <input
-                    type="text"
-                    className="form-input"
-                    value={question.rightAnswer || ''}
-                    onChange={(e) =>
-                      handleQuestionChange(index, 'rightAnswer', e.target.value)
-                    }
-                  /> */}
                   <select
                     className="form-select"
                     value={question.rightAnswer || ''}
@@ -319,45 +287,18 @@ export const CreateQuestPage = () => {
                 </>
               }
 
-              <label className="form-label">Фото:</label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) =>
-                  handleQuestionChange(index, 'media', {
-                    ...question.media,
-                    image: e.target.files,
-                  })
-                }
-              />
-
-              <label className="form-label">Відео:</label>
-              {/* <input
-                type="file"
-                accept="video/*"
-                onChange={(e) =>
-                  handleQuestionChange(index, 'media', {
-                    ...question.media,
-                    video: e.target.files,
-                  })
-                }
-              />
-              <p>OR</p> */}
+              <label className="form-label">Фото або Відео:</label>
               <input
                 className="form-input"
                 type="text"
                 placeholder='Вставте посилання на відео сюди'
                 onChange={(e) =>
-                  handleQuestionChange(index, 'media', {
-                    ...question.media,
-                    video: e.target.value,
-                  })
+                  handleQuestionChange(index, 'media', e.target.value)
                 }
               />
             </div>
           ))}
 
-          {/* <button type="button">Додати питання</button> */}
           <button
             type="button"
             onClick={addQuestion}

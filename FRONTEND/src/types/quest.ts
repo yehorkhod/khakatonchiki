@@ -21,11 +21,21 @@ type Feedback = {
   comment: string;
 };
 
-type Question = {
-  type: "open" | "test";
-  question: string;
-  options: string[]; 
-  text: string;
-  rightAnswer: string;
-  media: MediaItem;
+type Media = {
+  media: string;
 };
+
+export type Question = {
+  text: string;
+  type: string;
+  options: string[];
+  rightAnswer: string;
+  media: string;
+};
+
+export type QuestInfoType = {
+  id: string,
+  title: string,
+  author_id: string,
+  number_of_tasks: string,
+}

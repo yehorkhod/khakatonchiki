@@ -10,10 +10,11 @@
 import { Quest } from "./quest";
 
 export type User = {
-  id: string;
-  name: string;
+  id?: string;
+  username: string;
   email: string;
-  profilePicture: string;
-  createdQuests: Quest[];
-  completedQuests: Quest[];
+  rating?: "4.5";
+  user_image: string;
+  created_quests: Quest[];
+  completed_quests: Quest[];
 };

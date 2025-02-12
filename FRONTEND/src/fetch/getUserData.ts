@@ -1,8 +1,8 @@
-import { User } from "../types/User";
+import { User } from '../types/User';
 
 export async function getMyData(): Promise<User | null> {
   try {
-    const response = await fetch('/api/users/me', {
+    const response = await fetch('http://localhost:8000/api/users/me', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -12,8 +12,10 @@ export async function getMyData(): Promise<User | null> {
     if (!response.ok) {
       throw new Error(`Error: ${response.status} ${response.statusText}`);
     }
+    console.log(response, 'blaaaa');
 
     const data = await response.json();
+
     return data;
   } catch (error) {
     console.error('Failed to fetch user data:', error);
@@ -21,7 +23,22 @@ export async function getMyData(): Promise<User | null> {
   }
 }
 
-export async function getUserById(id: string): Promise<User | null> {
+export async function getMyProfile() {
+  const response = await fetch('http://localhost:8000/api/users/me', {
+    method: 'GET',
+    credentials: 'include',
+  });
+
+  console.log(response, 'heeeyyy response');
+
+  if (response.ok) {
+    return response.json();
+  } else {
+    throw new Error('Not authenticated');
+  }
+}
+
+export async function getUserById(id: string) {
   try {
     const response = await fetch('/api/users/user', {
       method: 'POST',
@@ -42,4 +59,3 @@ export async function getUserById(id: string): Promise<User | null> {
     return null;
   }
 }
-

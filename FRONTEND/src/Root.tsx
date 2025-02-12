@@ -64,7 +64,10 @@ export const Root = () => (
               path="/contacts"
               element={<ContactsPage />}
             />
-            <Route path='/about-us' element={<AboutUsPage />} />
+            <Route
+              path="/about-us"
+              element={<AboutUsPage />}
+            />
             <Route
               path="/register"
               element={<RegisterPage />}
@@ -73,11 +76,12 @@ export const Root = () => (
               path="/login"
               element={<LoginPage />}
             />
-            <Route
-              path="/profile/:id"
-              element={<ProfilePage />}
-            />
+
             <Route element={<NeedToRegister />}>
+              <Route
+                path="/profile/:id"
+                element={<ProfilePage />}
+              />
               <Route
                 path="/create-quest"
                 element={<CreateQuestPage />}
@@ -95,7 +99,10 @@ export const Root = () => (
                 element={<QuestResultPage />}
               />
             </Route>
-            <Route path="*" element={<NotFoundPage />} />
+            <Route
+              path="*"
+              element={<NotFoundPage />}
+            />
           </Route>
         </Routes>
       </Router>
