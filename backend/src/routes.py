@@ -147,8 +147,8 @@ def create_quest():
     )
 
 
-@main_blueprint.route("/get_quest_info", methods=["GET"])
-def get_quest(quest_id):
+@main_blueprint.route("/get_quest_info", methods=["POST"])
+def get_quest():
     data = request.json
     quest_id = data.get("quest_id")
 
@@ -178,8 +178,8 @@ def get_quest(quest_id):
     )
 
 
-@main_blueprint.route("/get_tasks", methods=["GET"])
-def get_tasks(quest_id):
+@main_blueprint.route("/get_tasks", methods=["POST"])
+def get_tasks():
     data = request.json
     quest_id = data.get("quest_id")
 
