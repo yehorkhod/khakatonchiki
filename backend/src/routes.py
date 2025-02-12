@@ -177,10 +177,12 @@ def get_tasks():
     if not quest_id:
         return jsonify({"error": "Quest ID is required"}), 400
 
+    quest = Quest.query.get(quest_id)
+
     tasks = Task.query.filter_by(quest_id=quest_id).all()
     tasks_data = [{"id": task.id, "content": task.task_data} for task in tasks]
 
-    return jsonify({"quest_id": quest_id, "tasks": tasks_data})
+    return jsonify({"quest_id": quest_id, "title": quest.title, "tasks": tasks_data})
 
 
 @main_blueprint.route("/quests/top", methods=["GET"])
