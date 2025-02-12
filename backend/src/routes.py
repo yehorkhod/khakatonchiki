@@ -193,7 +193,16 @@ def get_tasks():
 def get_quests():
     top_quests = Quest.query.order_by(Quest.rating.desc()).limit(10).all()
     quests_data = [
-        {"id": q.id, "title": q.title, "rating": q.rating} for q in top_quests
+        {
+            "id": q.id,
+            "author_id": q.author_id,
+            "author": User.query.get(q.author_id).username,
+            "title": q.title,
+            "description": q.description,
+            "number_of_tasks": q.number_of_tasks,
+            "duration": q.duration,
+            "rating": q.rating
+        } for q in top_quests
     ]
 
     return jsonify({"top_quests": quests_data})
