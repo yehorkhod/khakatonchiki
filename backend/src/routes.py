@@ -164,11 +164,12 @@ def get_quest():
             "title": quest.title,
             "description": quest.description,
             "author_id": quest.author_id,
+            "author": User.query.get(quest.author_id).username,
             "rating": quest.rating,
             "duration": quest.duration,
             "number_of_tasks": quest.number_of_tasks,
             "comments": [
-                {"id": comment.id, "text": comment.text, "user_id": comment.user_id}
+                {"id": comment.id, "text": comment.text, "user_id": comment.user_id, "username": User.query.get(comment.user_id).username}
                 for comment in Comment.query.filter_by(quest_id=quest_id).all()
             ],
         }

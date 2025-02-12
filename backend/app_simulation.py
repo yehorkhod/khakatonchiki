@@ -44,6 +44,7 @@ session = requests.Session()
 login_response = session.post(f"{BASE_URL}/auth/login", json=login_data)
 assert login_response.status_code == 200
 print("Login Response:", login_response.json())
+
 # Test Accessing User Profile (Requires Authentication)
 profile_response = session.get(f"{BASE_URL}/users/me")
 assert profile_response.status_code == 200
