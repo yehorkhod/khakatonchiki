@@ -108,6 +108,26 @@ Response:
   "email": "user@example.com",
   "rating": "4.5",
   "user_image": "<svg>...</svg>",
+  "created_quests": [
+    {
+      "id": "12",
+      "title": "lksdj",
+      "description": "slkdj",
+      "number_of_tasks": "3",
+      "duration": str(quest.duration) if quest.duration else None,
+      "rating": "4.5",
+    }
+  ],
+  "completed_quests": [
+    {
+      "id": "12",
+      "title": "lksdj",
+      "description": "slkdj",
+      "number_of_tasks": "3",
+      "duration": "30-45",
+      "rating": "4.5",
+    }
+  ]
 }
 ~~~
 
@@ -127,11 +147,171 @@ Response:
 
 ~~~json
 {
-  "id": "uuid",
-  "email": "user@example.com",
   "username": "user123",
+  "email": "user@example.com",
   "rating": "4.5",
   "user_image": "<svg>...</svg>",
+  "created_quests": [
+    {
+      "id": "12",
+      "title": "lksdj",
+      "description": "slkdj",
+      "number_of_tasks": "3",
+      "duration": str(quest.duration) if quest.duration else None,
+      "rating": "4.5",
+    }
+  ],
+  "completed_quests": [
+    {
+      "id": "12",
+      "title": "lksdj",
+      "description": "slkdj",
+      "number_of_tasks": "3",
+      "duration": "30-45",
+      "rating": "4.5",
+    }
+  ]
+}
+~~~
+
+### 7. Create Quest
+
+Endpoint: POST /api/create_quest
+
+Headers: Requires authentication
+
+Request Body:
+
+~~~json
+{
+  "title": "title",
+  "description": "description",
+  "duration": "30",
+  "tasks": [
+    { "stuff_1": "stuff_1", ... },
+    ...,
+    { "stuff_n": "stuff_n", ... },
+  ],
+}
+~~~
+
+Response:
+
+~~~json
+{
+  "message": "The quest and tasks have been created",
+  "quest_id": "1"
+}
+~~~
+
+### 8. Get Quest Info
+
+Endpoint: POST /api/get_quest_info
+
+Request Body:
+
+~~~json
+{
+  "quest_id": "1",
+}
+~~~
+
+Response:
+
+~~~json
+{
+  "id": "1",
+  "title": "title",
+  "author_id": "author",
+  "number_of_tasks": "4",
+}
+~~~
+
+### 9. Get Tasks
+
+Endpoint: POST /api/get_tasks
+
+Request Body:
+
+~~~json
+{
+  "quest_id": "1",
+}
+~~~
+
+Response:
+
+~~~json
+{
+  "quest_id": "1",
+  "tasks": [
+    { "id": "32", "content": {...} },
+    ...,
+    { "id": "14", "content": {...} },
+  ],
+}
+~~~
+
+### 10. Get Top 10 Quests
+
+Endpoint: GET /api/quests/top
+
+Response:
+
+~~~json
+{
+  "quest_id": "1",
+  "tasks": [
+    { "stuff_1": "stuff_1", ... },
+    ...,
+    { "stuff_n": "stuff_n", ... },
+  ],
+}
+~~~
+
+### 11. Get Tasks
+
+Endpoint: POST /api/finish_quest
+
+Headers: Requires authentication
+
+Request Body:
+
+~~~json
+{
+  "quest_id": "1",
+}
+~~~
+
+Response:
+
+~~~json
+{
+  "message": "Session created successfully"
+}
+~~~
+
+### 12. Get Tasks
+
+Endpoint: POST /api/leave_review
+
+Headers: Requires authentication
+
+Request Body:
+
+~~~json
+{
+  "quest_id": "1",
+  "rating": "3",
+  "comment": "..."
+}
+~~~
+
+Response:
+
+~~~json
+{
+  "message": "Session updated successfully"
 }
 ~~~
 
