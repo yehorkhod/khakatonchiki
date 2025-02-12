@@ -1,20 +1,19 @@
 import { useEffect, useState } from 'react';
-import { getQuests, getQuestsWithIds } from '../../fetch/getQuests';
+import { getQuests, TEST } from '../../fetch/getQuests';
 import { Quest } from '../../types/quest';
 import { QuestCard } from '../QuestCard/QuestCard';
 import './QuestList.scss';
 import { Loader } from '../Loader/Loader';
 
 export const QuestList = () => {
-  //fetch quests:
-
-  const [quests, setQuests] = useState<Quest[] | []>([]);
+  const [quests, setQuests] = useState<TEST[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     setIsLoading(true);
-    getQuestsWithIds() // ---> fetching data from server on a separate function
+
+    getQuests()
       .then((data) => {
         setQuests(data);
       })
@@ -31,19 +30,11 @@ export const QuestList = () => {
 
   return (
     <>
-      {/* {isLoading ? (
-        <p>Loading...</p>
-      ) : (
-        quests.map((quest) => (
-          <QuestCard key={quest.title} quest={quest} /> 
-        ))
-      )
-      } */}
       {isLoading ?
         <Loader />
         : <div className="list">
           {quests.map((quest) => (
-            <div key={quest.title} className="list__card">
+            <div key={quest.id} className="list__card">
             <QuestCard quest={quest} />
           </div>
           ))}
@@ -53,4 +44,3 @@ export const QuestList = () => {
   );
 };
 
-// keys for map!!!!! ids for quests!!!

@@ -5,7 +5,7 @@ import { shema } from '../../utils/functions/shema';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import { UserIdContext } from '../../context/UserIdContext';
-import { Register } from '../../fetch/getQuests';
+// import { Register } from '../../fetch/getQuests';
 
 type RegisterFormData = {
   name: string;
@@ -59,7 +59,7 @@ export const RegisterPage = () => {
         // console.log(data, data.user.id); 
         login(data.user.id);
         reset();
-        navigate(-1);
+        navigate('/login');
       });
 
     // try {

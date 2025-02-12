@@ -5,6 +5,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import { UserIdContext } from '../../context/UserIdContext';
+import { logIn } from '../../fetch/login';
 
 export const LoginPage = () => {
   const regExpEmail = new RegExp(/^\S+@\S+\.\S+$/);
@@ -45,84 +46,44 @@ export const LoginPage = () => {
     console.log({
           email: data.email,
           password: data.password,
-        });
+    });
+    
+    try {
+      const result = await logIn(data);
 
-    fetch('http://localhost:8000/api/auth/login', {
-      mode: 'no-cors',
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email: data.email,
-        password: data.password,
-      }),
-    })
-      .then((response) => {
-        console.log(response, 'response')
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      if (result) {
+        console.log('login successfull', result);
+        console.log(result.user.id);
+        login(result.user.id);
+        reset();
+        navigate(`/profile/${result.user.id}`);
       }
-      return response.json();
-    }).then((data) => {
-      console.log(data); // Встановлюємо відповідь сервера
-    })
-    // console.log(data);
-    // reset();
-    // navigate(-2);
-    // try {
-    //   const response = await axios.post('/api/login', {
+    } catch {
+
+    }
+
+    // await fetch('http://localhost:8000/api/auth/login', {
+    //   mode: 'no-cors',
+    //   method: 'POST',
+    //   credentials: "include",
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify({
     //     email: data.email,
     //     password: data.password,
-    //   });
-    //   reset();
-    //   navigate(-2);
-    // } catch (error: any) {
-    //   if (error.response?.status === 401) {
-    //     setError('password', {
-    //       type: 'manual',
-    //       message: error.response.data.message,
-    //     });
-    //   }
-    // }
-
-    // try {
-    //   const response = await fetch('http://localhost:8000/api/auth/login', {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify({
-    //       email: data.email,
-    //       password: data.password,
-    //       remember: true,
-    //     }),
-    //   });
-    
-    //   const responseData = await response.json();
-    
+    //     remember: true,
+    //   }),
+    // })
+    //   .then((response) => {
+    //     console.log(response, 'response')
     //   if (!response.ok) {
-    //     // if (response.status === 401) {
-    //     //   setError('password', {
-    //     //     type: 'manual',
-    //     //     message: responseData.message,
-    //     //   });
-    //     // }
-    //     throw new Error(responseData.message || 'Login failed');
+    //     throw new Error(`HTTP error! status: ${response.status}`);
     //   }
-
-    // if (response.ok && responseData.user.id) {
-    //   login(responseData.user.id); // Зберігаємо userId у контексті
-    // } else {
-    //   console.error('Error:', responseData);
-    // }
-    
-    //   reset();
-    //   navigate(-2);
-    // } catch (error) {
-    //   console.error('Fetch error:', error);
-    // }
-    
+    //   return response.json();
+    // }).then((data) => {
+    //   console.log(data); 
+    // })
   };
   return (
     <div className="login-page container">

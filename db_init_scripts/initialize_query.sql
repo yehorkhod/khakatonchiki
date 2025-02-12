@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS quests (
     description VARCHAR(500),
     number_of_tasks INTEGER NOT NULL,
     duration INTEGER,
+    duration INTEGER,
     rating NUMERIC(5,2) DEFAULT 0
 );
 
@@ -47,50 +48,38 @@ CREATE TABLE IF NOT EXISTS sessions (
     rating NUMERIC(5,2) CHECK (rating >= 0 AND rating <= 5)
 );
 
--- Function for recalculating the quest rating
+-- Function to update author rating
+CREATE OR REPLACE FUNCTION update_author_rating()
+RETURNS TRIGGER AS $$
+BEGIN
+    UPDATE users
+    SET rating = COALESCE(
+        (SELECT AVG(rating) FROM quests WHERE author_id = NEW.author_id), 0)
+    WHERE id = NEW.author_id;
+    
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Trigger to update author rating when a quest's rating changes
+CREATE TRIGGER trigger_update_author_rating
+AFTER UPDATE OF rating ON quests
+FOR EACH ROW EXECUTE FUNCTION update_author_rating();
+
+-- Function to update quest rating
 CREATE OR REPLACE FUNCTION update_quest_rating()
 RETURNS TRIGGER AS $$
 BEGIN
-    -- Update the quest rating if a non-NULL rating was passed to the quest
-    IF NEW.rating IS NOT NULL THEN
-        UPDATE quests
-        SET rating = (
-            SELECT ROUND(COALESCE(AVG(sessions.rating), 0), 2)
-            FROM sessions
-            WHERE sessions.quest_id = NEW.quest_id
-        )
-        WHERE id = NEW.quest_id;
-    END IF;
+    UPDATE quests
+    SET rating = COALESCE(
+        (SELECT AVG(rating) FROM sessions WHERE quest_id = NEW.quest_id), 0)
+    WHERE id = NEW.quest_id;
+    
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
--- Trigger for recalculating quest rating when changing/adding a session
+-- Trigger to update quest rating when a session is inserted, updated, or deleted
 CREATE TRIGGER trigger_update_quest_rating
-AFTER INSERT OR UPDATE ON sessions
+AFTER INSERT OR UPDATE OR DELETE ON sessions
 FOR EACH ROW EXECUTE FUNCTION update_quest_rating();
-
--- Function for recalculating quest author rating
-CREATE OR REPLACE FUNCTION update_user_rating()
-RETURNS TRIGGER AS $$
-BEGIN
-    -- Update the author's rating if the quest rating has changed
-    IF NEW.rating IS NOT NULL THEN
-        UPDATE users
-        SET rating = (
-            SELECT ROUND(COALESCE(AVG(quests.rating), 0), 2)
-            FROM quests
-            WHERE quests.author_id = (
-                SELECT author_id FROM quests WHERE id = NEW.quest_id
-            )
-        )
-        WHERE id = (SELECT author_id FROM quests WHERE id = NEW.quest_id);
-    END IF;
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
--- Trigger for recalculation of author's rating when changing quest rating
-CREATE TRIGGER trigger_update_user_rating
-AFTER UPDATE ON quests
-FOR EACH ROW EXECUTE FUNCTION update_user_rating();

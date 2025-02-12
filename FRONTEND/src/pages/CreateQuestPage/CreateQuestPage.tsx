@@ -4,6 +4,7 @@ import * as yup from 'yup';
 import { useEffect, useState } from 'react';
 import './CreatePageQuest.scss';
 import { useNavigate } from 'react-router-dom';
+import { createQuest } from '../../fetch/create-quest';
 
 const question = [
   {
@@ -34,7 +35,7 @@ type FormData = {
   title: string;
   description: string;
   // count: number;
-  time: number;
+  duration: string;
   // questions: Question[];
 };
 
@@ -54,7 +55,7 @@ export const CreateQuestPage = () => {
   const schema = yup.object().shape({
     title: yup.string().required('Назва обов’язкова'),
     description: yup.string().required('Опис обов’язковий'),
-    time: yup.number().min(1, 'Мінімальний час – 1 хв').required(),
+    duration: yup.string().required(),
     questions: yup.array().of(
       yup.object().shape({
         type: yup.string().oneOf(['open', 'test']).required(),
@@ -96,7 +97,7 @@ export const CreateQuestPage = () => {
       JSON.stringify({
         title: watch('title'),
         description: watch('description'),
-        time: watch('time'),
+        duration: watch('duration'),
         questions,
       }),
     );
@@ -110,22 +111,67 @@ export const CreateQuestPage = () => {
     });
   }, [setValue]);
 
-  const onSubmit = (data: FormData) => {
+  const onSubmit = async (data: FormData) => {
+    console.log('Form data before sending:', data);
     localStorage.setItem('formData', JSON.stringify({ ...data, questions }));
-    console.log('Form data before submission:', { ...data, questions });
 
+    try {
+      const result = await createQuest(data, questions);
+      if (result) {
+        console.log(result.message, 'messsss');
+        console.log(result.quest_id);
+        reset();
+        setQuestions([]);
+        localStorage.removeItem('formData');
+        navigate(`/quests/${result.quest_id}`);
+      }
+    } catch(err) {
+      console.error('Error submitting quest:', err);
+    }
+  };
     // const questData = {
     //   title: data.title,
     //   description: data.description,
-    //   time: data.time,
-    //   questions,
+    //   duration: data.duration,
+    //   tasks: questions,
     // };
+
+    // console.log('Form data before submission:', questData);
+
+    // try {
+    //   const response = await fetch('http://localhost:8000/api/create_quest', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //     credentials: 'include',
+    //     body: JSON.stringify(questData),
+    //   });
+
+    //   console.log(response, 'response');
+
+    //   if (!response.ok) {
+    //     throw new Error(`Error: ${response.status} response errroorr`);
+    //   }
+
+    //   const responseData = response.json();
+    //   console.log('Quest submitted successfully:', responseData);
+      // const questId = responseData.questId;
+
+      //   reset(); // Очищення форми
+    //   setQuestions([]); // Очищення питань
+    //   localStorage.removeItem('formData'); // Видалення даних з локального сховища
+    //   navigate(`/quests/&{questId}`); // Перехід на сторінку зі списком квестів (або будь-яку іншу)
+    // } catch(err) {
+    //   console.error('Error submitting quest:', err);
+    // }
+
   
     // localStorage.setItem('formData', JSON.stringify(questData));
     // console.log('Form data before submission:', questData);
   
     // try {
-    //   const response = await fetch('/api/quests', {
+    //   const response = await fetch('http://localhost:8000/api/create_quest', {
     //     method: 'POST',
     //     headers: {
     //       'Content-Type': 'application/json',
@@ -151,7 +197,7 @@ export const CreateQuestPage = () => {
     // } catch (error) {
     //   console.error('Error submitting quest:', error);
     // }
-  };
+  // };
 
   const addQuestion = () => {
     setQuestions([
@@ -174,7 +220,7 @@ export const CreateQuestPage = () => {
     reset({
       title: '',
       description: '',
-      time: 0,
+      duration: '0',
     });
     setQuestions([]);
     localStorage.removeItem('formData');
@@ -225,11 +271,11 @@ export const CreateQuestPage = () => {
             <input
               className="form-input"
               placeholder='Час виконання'
-              type="number"
-              {...register('time')}
+              type="string"
+              {...register('duration')}
             />
-            {errors.time && (
-              <span className="error">{errors.time.message}</span>
+            {errors.duration && (
+              <span className="error">{errors.duration.message}</span>
             )}
           </label>
           {/* <label>

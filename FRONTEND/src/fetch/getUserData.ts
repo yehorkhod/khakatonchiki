@@ -1,4 +1,4 @@
-import { User } from "../types/User";
+import { User } from '../types/User';
 
 export async function getMyData(): Promise<User | null> {
   try {
@@ -23,6 +23,21 @@ export async function getMyData(): Promise<User | null> {
   }
 }
 
+export async function getMyProfile() {
+  const response = await fetch('http://localhost:8000/api/users/me', {
+    method: 'GET',
+    credentials: 'include',
+  });
+
+  console.log(response, 'heeeyyy response');
+
+  if (response.ok) {
+    return response.json();
+  } else {
+    throw new Error('Not authenticated');
+  }
+}
+
 export async function getUserById(id: string): Promise<User | null> {
   try {
     const response = await fetch('/api/users/user', {
@@ -44,4 +59,3 @@ export async function getUserById(id: string): Promise<User | null> {
     return null;
   }
 }
-
